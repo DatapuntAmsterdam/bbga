@@ -1,5 +1,4 @@
 import sys
-import argparse
 
 from django.core.management import BaseCommand
 
@@ -29,14 +28,16 @@ class Command(BaseCommand):
             type=str,
             help='CSV bron bestand')
 
-        parser.add_argument('table',
-                            nargs='?',
-                            type=str,
-                            default="bbga_data_variabelen",
-                            help='Doel tabel')
+        parser.add_argument(
+            'table',
+            nargs='?',
+            type=str,
+            default="bbga_data_variabelen",
+            help='Doel tabel')
 
     def handle(self, *args, **options):
         """
+        validate and execute import task
         """
 
         if not options['csv_source']:
@@ -52,5 +53,5 @@ class Command(BaseCommand):
             # needs some cleanup
             import_data.import_meta_csv(csv, table)
         elif table == 'bbga_data_variabelen':
-            # tableu export (clean)
+            # tableaux export (clean)
             import_data.import_variable_csv(csv, table)
