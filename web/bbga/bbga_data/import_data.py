@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 # settings file names
 
+from django.conf import settings
 from django.db import connection
 from django.db.utils import DataError
 from bbga_data.models import Meta, Variabelen
@@ -52,8 +53,9 @@ def import_meta_csv(csv_path, table):
         # skip header
         headers = next(reader, None)
 
-        #for i, item in enumerate(headers):
-        #    print(i, item)
+        if settings.DEBUG:
+            for i, item in enumerate(headers):
+                print(i, item)
 
         for i, row in enumerate(reader):
             try:
