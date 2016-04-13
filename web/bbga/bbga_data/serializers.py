@@ -14,11 +14,6 @@ class Meta(serializers.ModelSerializer):
 
     class Meta:
         model = models.Meta
-        #fields = (
-        #    '_links',
-        #    '_display',
-        #    'id',
-        #)
 
 
 class MetaDetail(BBGAMixin, rest.HALSerializer):

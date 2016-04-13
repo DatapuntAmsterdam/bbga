@@ -12,27 +12,33 @@ from . import serializers
 
 @api_view(['GET'])
 def meta_groepen(request):
-    queryset = models.Meta.objects.values('groep').distinct()
+
+    queryset = models.Meta.objects.values('groep').distinct().extra(
+        order_by=['groep'])
+
     data = {
-        'groepen': [r['groep'] for r in queryset].sort()
+        'groepen': sorted([r['groep'] for r in queryset])
     }
     return Response(data)
 
 
 @api_view(['GET'])
 def meta_themas(request):
-    queryset = models.Meta.objects.values('thema').distinct()
+    queryset = models.Meta.objects.values('thema').distinct().extra(
+        order_by=['thema'])
     data = {
-        'themas': [r['thema'] for r in queryset].sort()
+        'themas': sorted([r['thema'] for r in queryset])
     }
     return Response(data)
 
 
 @api_view(['GET'])
 def meta_variabelen(request):
-    queryset = models.Meta.objects.values('variabele').distinct()
+    queryset = models.Meta.objects.values('variabele').distinct().extra(
+        order_by=['variabele'])
+
     data = {
-        'variabelen': [r['variabele'] for r in queryset].sort()
+        'variabelen': [r['variabele'] for r in queryset]
     }
     return Response(data)
 

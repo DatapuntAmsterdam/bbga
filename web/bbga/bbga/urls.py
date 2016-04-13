@@ -24,6 +24,9 @@ import collections
 from rest_framework import routers, views, reverse, response
 
 
+# stack overflow hack
+# http://stackoverflow.com/questions/18817988/using-django-rest-frameworks-browsable-api-with-apiviews
+
 class HybridRouter(routers.DefaultRouter):
     def __init__(self, *args, **kwargs):
         super(HybridRouter, self).__init__(*args, **kwargs)
@@ -78,7 +81,23 @@ class HybridRouter(routers.DefaultRouter):
         return APIRoot.as_view()
 
 
-bbga = HybridRouter()
+class BBGARouter(HybridRouter):
+    """
+    Specifieke functionaliteit voor de BBGA API.
+    """
+
+    def get_api_root_view(self):
+        view = super().get_api_root_view()
+        cls = view.cls
+
+        class BBGA(cls):
+            pass
+
+        BBGA.__doc__ = self.__doc__
+        return BBGA.as_view()
+
+
+bbga = BBGARouter()
 
 bbga.add_api_view(
     'groepen',
