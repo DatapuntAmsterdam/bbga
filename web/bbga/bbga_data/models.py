@@ -30,12 +30,12 @@ class Meta(models.Model):
 #    pass
 
 
-class Variabelen(models.Model):
+class Cijfers(models.Model):
     """
     """
-    jaar = models.IntegerField()
-    gebiedcode15 = models.CharField(max_length=4)
-    variabele = models.CharField(max_length=30)
+    jaar = models.IntegerField(db_index=True)
+    gebiedcode15 = models.CharField(db_index=True, max_length=4)
+    variabele = models.CharField(db_index=True, max_length=30)
     waarde = models.FloatField(null=True)
 
     class Meta:

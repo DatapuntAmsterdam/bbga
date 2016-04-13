@@ -10,7 +10,7 @@ from collections import OrderedDict
 from django.conf import settings
 from django.db import connection
 from django.db.utils import DataError
-from bbga_data.models import Meta, Variabelen
+from bbga_data.models import Meta, Cijfers
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +72,8 @@ def import_variable_csv(csv_file, table):
     """
     """
     log.debug('removing old variable data')
-    Variabelen.objects.all().delete()
+    # clear old data
+    Cijfers.objects.all().delete()
 
     columns = ['jaar', 'gebiedcode15', 'variabele', 'waarde']
 

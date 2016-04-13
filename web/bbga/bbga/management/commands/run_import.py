@@ -4,6 +4,10 @@ from django.core.management import BaseCommand
 
 from bbga_data import import_data
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     """
@@ -16,7 +20,7 @@ class Command(BaseCommand):
 
     """
     tables = [
-            'bbga_data_variabelen',
+            'bbga_data_cijfers',
             'bbga_data_meta',
     ]
 
@@ -32,7 +36,7 @@ class Command(BaseCommand):
             'table',
             nargs='?',
             type=str,
-            default="bbga_data_variabelen",
+            default="bbga_data_cijfers",
             help='Doel tabel')
 
     def handle(self, *args, **options):
@@ -52,6 +56,10 @@ class Command(BaseCommand):
             # xsl output / converted to utf-8
             # needs some cleanup
             import_data.import_meta_csv(csv, table)
-        elif table == 'bbga_data_variabelen':
+        elif table == 'bbga_data_cijfers':
             # tableaux export (clean)
             import_data.import_variable_csv(csv, table)
+
+        else:
+            log.error('nothing imported')
+            sys.exit(1)
