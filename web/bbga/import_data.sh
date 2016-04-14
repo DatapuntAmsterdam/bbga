@@ -12,19 +12,18 @@ unzip $(ls -Art data/*.zip | tail -n 1) -d /app/unzipped/
 
 echo 'convert meta data'
 
-
 cd /app/unzipped/
 
 iconv -f WINDOWS-1251 -t UTF-8 -o metadata_utf8.csv metadata.csv
 
 cd /app
 
-echo 'load meta data'
+echo 'Loading Meta data'
 
-python manage.py run_import /app/data/bbga_csv/metadata_utf8.csv  bbga_data_meta
+python manage.py run_import /app/unzipped/metadata_utf8.csv  bbga_data_meta
 
-echo 'load bbga cijfers ~1.000.000 row'
+echo 'Loading bbga cijfers ~1.000.000 row'
 
-python manage.py run_import /app/data/bbga_csv/bbga_tableau
+python manage.py run_import /app/unzipped/bbga_tableau.csv
 
-echo 'import BBGA DONE'
+echo 'Import BBGA DONE'

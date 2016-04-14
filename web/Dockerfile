@@ -7,10 +7,16 @@ EXPOSE 8000
 
 RUN apt-get update \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-	&& adduser --system datapunt \
+	&& apt-get install -y \
+		netcat \
+		unzip \
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN adduser --system datapunt \
 	&& mkdir -p /static \
 	&& chown datapunt /static \
+	&& mkdir -p /app/unzipped \
+	&& chown datapunt /app/unzipped \
 	&& pip install uwsgi
 
 WORKDIR /app
@@ -20,5 +26,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 USER datapunt
 
 COPY bbga /app/
-COPY import_data.sh /
+
 CMD /app/docker-entrypoint.sh
