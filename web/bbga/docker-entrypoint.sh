@@ -6,7 +6,7 @@ set -e
 cd /app
 
 # collect static files
-python manage.py collectstatic --noinput
+#python manage.py collectstatic --noinput
 
 # migrate database tables
 yes yes | python manage.py migrate --noinput
