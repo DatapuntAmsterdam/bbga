@@ -20,4 +20,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 USER datapunt
 
 COPY bbga /app/
+COPY import_data.sh /
 CMD /app/docker-entrypoint.sh
