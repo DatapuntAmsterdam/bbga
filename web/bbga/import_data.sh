@@ -10,7 +10,7 @@ echo 'unzipping latest bbga file'
 
 unzip $(ls -Art data/*.zip | tail -n 1) -d /app/unzipped/
 
-echo 'convert meta data'
+echo 'convert meta data to utf-8'
 
 cd /app/unzipped/
 

@@ -99,6 +99,7 @@ class BBGARouter(HybridRouter):
 
 bbga = BBGARouter()
 
+# browsable links
 bbga.add_api_view(
     'groepen',
     url(r'^bbga/groepen/', bbga_views.meta_groepen, name='groepen'))
@@ -121,7 +122,8 @@ bbga.register(
     r'cijfers', bbga_views.CijfersViewSet, base_name='bbga/cijfers'
 )
 
-
+# root url
 urlpatterns = [
     url(r'^bbga/', include(bbga.urls)),
+    # TODO health
 ]
