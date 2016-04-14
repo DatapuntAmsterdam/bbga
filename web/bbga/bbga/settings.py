@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
 
 TESTING = sys.argv[1:2] == ['test']
 JENKINS = 'jenkins' in sys.argv
