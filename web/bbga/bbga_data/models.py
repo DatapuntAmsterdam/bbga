@@ -24,12 +24,6 @@ class Meta(models.Model):
     minimum_aantal_woningen = models.IntegerField(null=True)
 
 
-#class Gebieden(models.Model):
-#    """
-#    """
-#    pass
-
-
 class Cijfers(models.Model):
     """
     """
