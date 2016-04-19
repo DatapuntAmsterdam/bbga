@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
@@ -150,7 +150,8 @@ LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
 
-# HEALTH_MODEL = 'atlas.'
+HEALTH_MODEL = 'bbga_data.Meta'
+
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
     MAX_PAGINATE_BY=100,

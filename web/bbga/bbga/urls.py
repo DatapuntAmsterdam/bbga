@@ -113,7 +113,6 @@ bbga.add_api_view(
     url(r'^bbga/variabelen/', bbga_views.meta_variabelen, name='variabelen')
 )
 
-
 bbga.register(
     r'meta', bbga_views.MetaViewSet, base_name='bbga/meta',
 )
@@ -125,5 +124,5 @@ bbga.register(
 # root url
 urlpatterns = [
     url(r'^bbga/', include(bbga.urls)),
-    # TODO health
+    url(r'^status/', include("datapunt_generic.health.urls"))
 ]
