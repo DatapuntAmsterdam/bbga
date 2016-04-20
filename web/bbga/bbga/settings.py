@@ -151,7 +151,7 @@ LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
 
-HEALTH_MODEL = 'bbga_data.Meta'
+HEALTH_MODEL = 'bbga_data.Cijfers'
 
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
