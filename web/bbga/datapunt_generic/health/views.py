@@ -13,9 +13,21 @@ from django.http import HttpResponse
 try:
     model = get_model(settings.HEALTH_MODEL)
 except:
-    raise ImproperlyConfigured('settings.HEALTH_MODEL doesn\'t resolve to a useable model')
+    raise ImproperlyConfigured(
+        'settings.HEALTH_MODEL doesn\'t resolve to a useable model')
 
 log = logging.getLogger(__name__)
+
+
+def check_data(request):
+    # check bbga
+    try:
+        assert model.objects.count() > 1000000
+    except:
+        log.exception("No enough BBGA data found")
+        return HttpResponse(
+            "No sufficient BBGA data found",
+            content_type="text/plain", status=500)
 
 
 def health(request):
@@ -26,15 +38,13 @@ def health(request):
             assert cursor.fetchone()
     except:
         log.exception("Database connectivity failed")
-        return HttpResponse("Database connectivity failed", content_type="text/plain", status=500)
+        return HttpResponse(
+            "Database connectivity failed",
+            content_type="text/plain", status=500)
 
-    return HttpResponse("Connectivity OK", content_type='text/plain', status=200)
+    response = check_data(request)
+    if response:
+        return response
 
-
-def check_data(request):
-    # check bag
-    try:
-        assert model.objects.count() > 10
-    except:
-        log.exception("No BAG data found")
-        return HttpResponse("No BAG data found", content_type="text/plain", status=500)
+    return HttpResponse(
+        "Connectivity OK", content_type='text/plain', status=200)

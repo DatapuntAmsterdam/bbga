@@ -2,7 +2,6 @@
 
 # Create your views here.
 from rest_framework.response import Response
-from rest_framework.decorators import list_route
 from rest_framework.decorators import api_view
 
 from datapunt_generic.generic import rest
@@ -50,35 +49,23 @@ class MetaViewSet(rest.AtlasViewSet):
     serializer_detail_class = serializers.MetaDetail
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
-    @list_route(methods=['get'])
-    def themas(self, request):
-        queryset = models.Meta.objects.values('thema').distinct()
-        data = {
-            'themas': [r['thema'] for r in queryset]
-        }
-        return Response(data)
-
-    @list_route(methods=['get'])
-    def groepen(self, request):
-        queryset = models.Meta.objects.values('groep').distinct()
-        data = {
-            'groepen': [r['groep'] for r in queryset]
-        }
-        return Response(data)
-
-    @list_route(methods=['get'])
-    def variabelen(self, request):
-        queryset = models.Meta.objects.values('variabele').distinct()
-        data = {
-            'variabelen': [
-                r['variabele'] for r in queryset]
-        }
-        return Response(data)
-
 
 class CijfersViewSet(rest.AtlasViewSet):
+    """
+    Basisbestand Gebieden Amsterdam
+
+    https://www.ois.amsterdam.nl/online-producten/basisbestand-gebieden-amsterdam
+
+    bronhouder: OIS (Onderzoek, Informatie en Statistiek)
+
+    bekijk de filter opties
+    er kan op jaar, gebiedcode15 en variabele gefiltert worden
+    """
 
     queryset = models.Cijfers.objects.all()
     serializer_class = serializers.Cijfers
     serializer_detail_class = serializers.CijferDetail
     filter_fields = ('jaar', 'gebiedcode15', 'variabele')
+
+    ordering_fields = ('jaar', 'buurt', 'variabele')
+    ordering = ('buurt', 'variabele', 'jaar')
