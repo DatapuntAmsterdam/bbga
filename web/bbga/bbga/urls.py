@@ -83,6 +83,11 @@ class HybridRouter(routers.DefaultRouter):
 
 class BBGARouter(HybridRouter):
     """
+    Basisbestand Gebieden Amsterdam
+
+    [dashboard](http://www.ois.amsterdam.nl/visualisatie/dashboard_kerncijfers.html)
+
+
     Specifieke functionaliteit voor de BBGA API.
     """
 
@@ -102,24 +107,27 @@ bbga = BBGARouter()
 # browsable links
 bbga.add_api_view(
     'groepen',
-    url(r'^bbga/groepen/', bbga_views.meta_groepen, name='groepen'))
+    url(r'^groepen/', bbga_views.meta_groepen, name='groepen'))
 
 bbga.add_api_view(
     'themas',
-    url(r'^bbga/themas/', bbga_views.meta_themas, name='themas'))
+    url(r'^themas/', bbga_views.meta_themas, name='themas'))
 
 bbga.add_api_view(
     'variabelen',
-    url(r'^bbga/variabelen/', bbga_views.meta_variabelen, name='variabelen')
+    url(r'^variabelen/', bbga_views.meta_variabelen, name='variabelen')
 )
+
 
 bbga.register(
     r'meta', bbga_views.MetaViewSet, base_name='bbga/meta',
 )
 
+
 bbga.register(
     r'cijfers', bbga_views.CijfersViewSet, base_name='bbga/cijfers'
 )
+
 
 # root url
 urlpatterns = [
