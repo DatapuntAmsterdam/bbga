@@ -43,6 +43,7 @@ def health(request):
             content_type="text/plain", status=500)
 
     response = check_data(request)
+
     if response:
         return response
 
