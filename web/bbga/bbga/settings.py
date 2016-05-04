@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'bbga',
     'bbga_data',
 
-    'rest_framework'
+    'rest_framework',
+    'rest_framework_swagger',
 
 ]
 
@@ -144,7 +145,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
@@ -176,3 +176,43 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?.*\.datapunt.amsterdam\.nl$',
     '^(https?://)?.*\.amsterdam\.nl$',
 )
+
+# SWAGGER
+
+swag_path = 'api-acc.datapunt.amsterdam.nl/bbga/docs'
+
+if DEBUG:
+    swag_path = '127.0.0.1:8000/bbga/docs'
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    'api_path': '/',
+
+    'enabled_methods': [
+        'get',
+    ],
+
+    'api_key': '',
+
+    'is_authenticated': False,
+    'is_superuser': False,
+
+    'unauthenticated_user': 'django.contrib.auth.models.AnonymousUser',
+    'permission_denied_handler': None,
+    'resource_access_handler': None,
+
+    'protocol': 'https' if not DEBUG else '',
+    'base_path': swag_path,
+
+    'info': {
+        'contact': 'atlas.basisinformatie@amsterdam.nl',
+        'description': 'This is the BBGA API server.',
+        'license': 'license Not known yet.',
+        'licenseUrl': '://www.amsterdam.nl/stelselpedia/',
+        'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
+        'title': 'BBGA',
+    },
+
+    'doc_expansion': 'list',
+}

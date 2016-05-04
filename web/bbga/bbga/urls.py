@@ -118,6 +118,11 @@ bbga.add_api_view(
     url(r'^variabelen/', bbga_views.meta_variabelen, name='variabelen')
 )
 
+bbga.add_api_view(
+    'gebieden',
+    url(r'^gebieden/', bbga_views.meta_gebiedcodes, name='gebieden')
+)
+
 
 bbga.register(
     r'meta', bbga_views.MetaViewSet, base_name='bbga/meta',
@@ -131,6 +136,7 @@ bbga.register(
 
 # root url
 urlpatterns = [
+    url(r'^bbga/docs/', include('rest_framework_swagger.urls')),
     url(r'^bbga/', include(bbga.urls)),
     url(r'^status/', include("datapunt_generic.health.urls"))
 ]

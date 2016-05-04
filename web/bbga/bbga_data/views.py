@@ -11,6 +11,9 @@ from . import serializers
 
 @api_view(['GET'])
 def meta_groepen(request):
+    """
+    Lijst van groepen
+    """
 
     queryset = models.Meta.objects.values('groep').distinct().extra(
         order_by=['groep'])
@@ -23,6 +26,9 @@ def meta_groepen(request):
 
 @api_view(['GET'])
 def meta_themas(request):
+    """
+    Lijst met gebruikte thema's
+    """
     queryset = models.Meta.objects.values('thema').distinct().extra(
         order_by=['thema'])
     data = {
@@ -33,6 +39,9 @@ def meta_themas(request):
 
 @api_view(['GET'])
 def meta_variabelen(request):
+    """
+    Lijst met gebruikte variabelen
+    """
     queryset = models.Meta.objects.values('variabele').distinct().extra(
         order_by=['variabele'])
 
@@ -42,12 +51,60 @@ def meta_variabelen(request):
     return Response(data)
 
 
+@api_view(['GET'])
+def meta_gebiedcodes(request):
+    """
+    Lijst met gebruikte gebiedscodes
+    """
+    queryset = models.Cijfers.objects.values('gebiedcode15').distinct().extra(
+        order_by=['gebiedcode15'])
+
+    data = {
+        'variabelen': [r['gebiedcode15'] for r in queryset]
+    }
+    return Response(data)
+
+
 class MetaViewSet(rest.AtlasViewSet):
+    """
+    Metadata
+
+    Lijst met alle Meta-data gebruikt in BBGA
+    """
 
     queryset = models.Meta.objects.all()
     serializer_class = serializers.Meta
     serializer_detail_class = serializers.MetaDetail
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
+
+    def list(self, request, *args, **kwargs):
+        """
+        Metadata
+
+        ---
+        parameters:
+            - name: variabele
+              description: filter op variabele
+              required: False
+              type: string
+              paramType: query
+            - name: groep
+              description: filter op groep
+              required: False
+              type: string
+              paramType: query
+            - name: thema
+              description: filter op thema
+              required: False
+              type: string
+              paramType: query
+            - name: bron
+              description: filter op bron
+              required: False
+              type: string
+              paramType: query
+        """
+        return super().list(request, *args, **kwargs)
 
 
 class CijfersViewSet(rest.AtlasViewSet):
