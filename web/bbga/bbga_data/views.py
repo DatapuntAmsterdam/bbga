@@ -9,6 +9,12 @@ from . import models
 from . import serializers
 
 
+from rest_framework import filters
+import django_filters
+from datetime import date
+
+
+
 @api_view(['GET'])
 def meta_groepen(request):
     """
@@ -107,6 +113,36 @@ class MetaViewSet(rest.AtlasViewSet):
         return super().list(request, *args, **kwargs)
 
 
+class CijfersFilter(filters.FilterSet):
+    """
+    Filter nummeraanduidingkjes
+    """
+
+    jaar = django_filters.MethodFilter()
+
+    class Meta:
+        model = models.Cijfers
+        fields = [
+            'gebiedcode15',
+            'variabele',
+            # must be last!!
+            'jaar',
+        ]
+
+    def filter_jaar(self, queryset, value):
+        if value == 'latest':
+            # find value for this year
+            year = date.today().year
+            qs = queryset.filter(jaar=year)
+            valid = qs.count()
+            # else find value from last year
+            if not valid:
+                qs = queryset(jaar=year-1)
+            return qs
+
+        return queryset.filter(jaar=value)
+
+
 class CijfersViewSet(rest.AtlasViewSet):
     """
     Basisbestand Gebieden Amsterdam
@@ -122,7 +158,7 @@ class CijfersViewSet(rest.AtlasViewSet):
     queryset = models.Cijfers.objects.all()
     serializer_class = serializers.Cijfers
     serializer_detail_class = serializers.CijferDetail
-    filter_fields = ('jaar', 'gebiedcode15', 'variabele')
+    filter_class = CijfersFilter
 
     ordering_fields = ('jaar', 'buurt', 'variabele')
     ordering = ('buurt', 'variabele', 'jaar')
