@@ -137,7 +137,7 @@ class CijfersFilter(filters.FilterSet):
             valid = qs.count()
             # else find value from last year
             if not valid:
-                qs = queryset(jaar=year-1)
+                qs = queryset.filter(jaar=year-1)
             return qs
 
         return queryset.filter(jaar=value)
