@@ -7,6 +7,7 @@ import os
 
 
 from bbga_data import import_data
+from bbga_data import models
 
 
 class BrowseDatasetsTestCase(APITestCase):
@@ -63,6 +64,51 @@ class BrowseDatasetsTestCase(APITestCase):
             self.assertEqual(response[
                 'Content-Type'],
                 'application/json', 'Wrong Content-Type for {}'.format(url))
+
+    def test_latest_filter(self):
+        """
+        test latest filtering
+        """
+        url = 'bbga/cijfers'
+        params = '?jaar=latest&gebiedcode15=STAD&variabele=BEV0_3'
+
+        response = self.client.get('/{}/{}'.format(url, params))
+
+        self.assertEqual(
+            response.status_code, 200,
+            'Wrong response code for {}'.format(url))
+
+        self.assertIn(
+                'count', response.data, 'No count attribute in {}'.format(url))
+
+        self.assertNotEqual(
+                response.data['count'], 0,
+                'Wrong result count for {}'.format(url))
+
+        latest = response.data['results'][0]['jaar']
+
+        c1 = models.Cijfers.objects.get(jaar=latest, variabele='BEV0_3')
+        c2 = models.Cijfers.objects.get(jaar=latest - 1, variabele='BEV0_3')
+        c3 = models.Cijfers.objects.get(jaar=latest - 2, variabele='BEV0_3')
+
+        c1.delete()
+        c2.delete()
+        c3.delete()
+
+        response = self.client.get('/{}/{}'.format(url, params))
+
+        old = response.data['results'][0]['jaar']
+
+        self.assertEqual(latest - 3, old)
+
+        # check for 2016
+        #
+        # models.
+        # remove object jaar and jaar-1
+
+        # get latests
+
+        # = jaar - 3
 
     def test_health(self):
         """

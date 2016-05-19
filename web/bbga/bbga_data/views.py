@@ -134,10 +134,15 @@ class CijfersFilter(filters.FilterSet):
             # find value for this year
             year = date.today().year
             qs = queryset.filter(jaar=year)
-            valid = qs.count()
-            # else find value from last year
-            if not valid:
-                qs = queryset.filter(jaar=year-1)
+            # check if we have data or go
+            # up to 3 years back!!
+            for i in range(1, 4):
+                valid = qs.count()
+                if valid:
+                    break
+                else:
+                    year = year - 1
+                    qs = queryset.filter(jaar=year)
             return qs
 
         return queryset.filter(jaar=value)
