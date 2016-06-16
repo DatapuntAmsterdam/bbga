@@ -70,6 +70,7 @@ def import_meta_csv(csv_path, table):
 
 def import_variable_csv(csv_file, table):
     """
+    Import the large cijfers dataset
     """
     log.debug('removing old variable data')
     # clear old data
