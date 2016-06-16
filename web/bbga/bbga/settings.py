@@ -172,7 +172,6 @@ REST_FRAMEWORK = dict(
 
 
 CORS_ORIGIN_REGEX_WHITELIST = (
-    '*',
     '^(https?://)?localhost(:\d+)?$',
     '^(https?://)?.*\.datapunt.amsterdam\.nl$',
     '^(https?://)?.*\.amsterdam\.nl$',
