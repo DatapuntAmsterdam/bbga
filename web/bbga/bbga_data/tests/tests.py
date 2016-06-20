@@ -1,11 +1,11 @@
-
-# Create your tests here.
+#Python
+import os
+from unittest.mock import Mock
 # Packages
 from rest_framework.test import APITestCase
+from django.http import HttpResponse
+from corsheaders.middleware import CorsMiddleware
 # Project
-import os
-
-
 from bbga_data import import_data
 from bbga_data import models
 
@@ -31,6 +31,7 @@ class BrowseDatasetsTestCase(APITestCase):
         cijfers_csv = os.path.join(
             BASE_DIR, 'tests/test_data/bbga_tableau.csv')
 
+        self.middleware = CorsMiddleware()
         import_data.import_meta_csv(meta_csv, 'bbga_data_meta')
         import_data.import_variable_csv(cijfers_csv, 'bbga_data_cijfers')
 
@@ -120,3 +121,19 @@ class BrowseDatasetsTestCase(APITestCase):
         self.assertEqual(
             response.status_code, 500,
             'Wrong response code for health')
+
+    def test_cors(self):
+        """
+        Cross Origin Requests should be allowed.
+        """
+        request = Mock(path='https://api.datapunt.amsterdam.nl/{}/'.format(self.datasets[1]))
+        request.method = 'GET'
+        request.is_secure = lambda: True
+        request.META = {
+            'HTTP_REFERER': 'https://foo.google.com',
+            'HTTP_HOST': 'api.datapunt.amsterdam.nl',
+            'HTTP_ORIGIN': 'https://foo.google.com',
+        }
+        response = self.middleware.process_response(request, HttpResponse())
+        self.assertTrue('access-control-allow-origin' in response._headers)
+        self.assertEquals('*', response._headers['access-control-allow-origin'][1])
