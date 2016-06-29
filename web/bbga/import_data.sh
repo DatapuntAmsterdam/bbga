@@ -20,7 +20,7 @@ cd /app
 
 echo 'Clear current data'
 
-python manage.py migrate bbga_data zero
+#python manage.py migrate bbga_data zero
 # migrate database tables
 yes yes | python manage.py migrate --noinput
 
