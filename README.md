@@ -29,7 +29,10 @@ The Database should now be available on 127.0.0.1:5406
 Importing data
 --------------
 
+
 ####
+
+>   docker-compose run python manage.py migrate
 
 >   docker-compose run web bash import_data.sh
 

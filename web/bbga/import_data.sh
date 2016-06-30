@@ -18,6 +18,13 @@ iconv -f WINDOWS-1251 -t UTF-8 -o metadata_utf8.csv metadata.csv
 
 cd /app
 
+echo 'Clear current data'
+
+#python manage.py migrate bbga_data zero
+# migrate database tables
+yes yes | python manage.py migrate --noinput
+
+
 echo 'Loading Meta data'
 
 python manage.py run_import /app/unzipped/metadata_utf8.csv  bbga_data_meta

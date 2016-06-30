@@ -1,12 +1,13 @@
-
-# Create your tests here.
+#Python
+import os
+from unittest.mock import Mock
 # Packages
 from rest_framework.test import APITestCase
+from django.http import HttpResponse
+from corsheaders.middleware import CorsMiddleware
 # Project
-import os
-
-
 from bbga_data import import_data
+from bbga_data import models
 
 
 class BrowseDatasetsTestCase(APITestCase):
@@ -30,6 +31,7 @@ class BrowseDatasetsTestCase(APITestCase):
         cijfers_csv = os.path.join(
             BASE_DIR, 'tests/test_data/bbga_tableau.csv')
 
+        self.middleware = CorsMiddleware()
         import_data.import_meta_csv(meta_csv, 'bbga_data_meta')
         import_data.import_variable_csv(cijfers_csv, 'bbga_data_cijfers')
 
@@ -64,6 +66,51 @@ class BrowseDatasetsTestCase(APITestCase):
                 'Content-Type'],
                 'application/json', 'Wrong Content-Type for {}'.format(url))
 
+    def test_latest_filter(self):
+        """
+        test latest filtering
+        """
+        url = 'bbga/cijfers'
+        params = '?jaar=latest&gebiedcode15=STAD&variabele=BEV0_3'
+
+        response = self.client.get('/{}/{}'.format(url, params))
+
+        self.assertEqual(
+            response.status_code, 200,
+            'Wrong response code for {}'.format(url))
+
+        self.assertIn(
+                'count', response.data, 'No count attribute in {}'.format(url))
+
+        self.assertNotEqual(
+                response.data['count'], 0,
+                'Wrong result count for {}'.format(url))
+
+        latest = response.data['results'][0]['jaar']
+
+        c1 = models.Cijfers.objects.get(jaar=latest, variabele='BEV0_3')
+        c2 = models.Cijfers.objects.get(jaar=latest - 1, variabele='BEV0_3')
+        c3 = models.Cijfers.objects.get(jaar=latest - 2, variabele='BEV0_3')
+
+        c1.delete()
+        c2.delete()
+        c3.delete()
+
+        response = self.client.get('/{}/{}'.format(url, params))
+
+        old = response.data['results'][0]['jaar']
+
+        self.assertEqual(latest - 3, old)
+
+        # check for 2016
+        #
+        # models.
+        # remove object jaar and jaar-1
+
+        # get latests
+
+        # = jaar - 3
+
     def test_health(self):
         """
         Health is only ok (200) with more the 1.000.000 records.
@@ -74,3 +121,19 @@ class BrowseDatasetsTestCase(APITestCase):
         self.assertEqual(
             response.status_code, 500,
             'Wrong response code for health')
+
+    def test_cors(self):
+        """
+        Cross Origin Requests should be allowed.
+        """
+        request = Mock(path='https://api.datapunt.amsterdam.nl/{}/'.format(self.datasets[1]))
+        request.method = 'GET'
+        request.is_secure = lambda: True
+        request.META = {
+            'HTTP_REFERER': 'https://foo.google.com',
+            'HTTP_HOST': 'api.datapunt.amsterdam.nl',
+            'HTTP_ORIGIN': 'https://foo.google.com',
+        }
+        response = self.middleware.process_response(request, HttpResponse())
+        self.assertTrue('access-control-allow-origin' in response._headers)
+        self.assertEquals('*', response._headers['access-control-allow-origin'][1])

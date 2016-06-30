@@ -29,7 +29,7 @@ def meta_row_mapping(row):
         ('bron', row[5]),
         ('peildatum', row[6]),
         ('verschijningsfrequentie', row[7]),
-        ('eenheid', row[8]),
+        ('eenheid', to_int(row[8])),
         ('groep', row[9]),
         ('format', row[10]),
         ('thema_kleurentabel', row[11]),
@@ -62,7 +62,7 @@ def import_meta_csv(csv_path, table):
                 _, created = Meta.objects.get_or_create(
                     **meta_row_mapping(row)
                 )
-            except DataError:
+            except(ValueError, DataError):
                 log.error(row)
                 print_row(meta_row_mapping(row))
                 sys.exit(1)
@@ -70,6 +70,7 @@ def import_meta_csv(csv_path, table):
 
 def import_variable_csv(csv_file, table):
     """
+    Import the large cijfers dataset
     """
     log.debug('removing old variable data')
     # clear old data
