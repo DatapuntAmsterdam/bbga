@@ -9,7 +9,7 @@ importer:
   links:
     - database:database
   volumes:
-    - /mnt/data/bbga:/app/diva
+    - /mnt/data/bbga:/app/data
 #    - ../data:/app/data
   environment:
     DB_NAME: bbga
