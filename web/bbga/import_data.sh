@@ -8,7 +8,7 @@ source docker-wait.sh
 
 echo 'unzipping latest bbga file'
 
-unzip -o $(ls -Art data/*.zip | tail -n 1) -d /app/unzipped/
+unzip $(ls -Art data/*.zip | tail -n 1) -d /app/unzipped/
 
 echo 'convert meta data to utf-8'
 
@@ -20,7 +20,7 @@ cd /app
 
 echo 'Clear current data'
 
-python manage.py migrate bbga_data zero
+#python manage.py migrate bbga_data zero
 # migrate database tables
 yes yes | python manage.py migrate --noinput
 
