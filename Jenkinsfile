@@ -26,7 +26,7 @@ node {
 
     stage "Build"
 
-        def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/geosearch:${BRANCH}", "web")
+        def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/bbga:${BRANCH}", "web")
         image.push()
 
         if (BRANCH == "master") {
@@ -40,7 +40,7 @@ node {
         build job: 'Subtask_Openstack_Playbook',
                 parameters: [
                         [$class: 'StringParameterValue', name: 'INVENTORY', value: INVENTORY],
-                        [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-datapunt-geosearch.yml'],
+                        [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
                         [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                 ]
     }
