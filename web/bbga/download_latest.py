@@ -16,18 +16,17 @@ def download():
 	metadata_res.raise_for_status()
 
 	metadata = metadata_res.json()
-	zipfile_location = metadata['result']['resources'][0]['url']
+	download_csv(metadata['result']['resources'][1]['url'], 'bbga.csv')
+	download_csv(metadata['result']['resources'][2]['url'], 'metadata.csv')
 
-	print("Downloading BBGA zip from", zipfile_location)
-	zipfile = requests.get(zipfile_location, stream=True)
-	zipfile.raise_for_status()
-
-	with open('bbga.zip', 'wb') as f:
-		zipfile.raw.decode_content = True
-		shutil.copyfileobj(zipfile.raw, f)
-
-	print("Downloaded as", "bbga.zip")
-
+def download_csv(csv_location, target):
+	print("Downloading CSV from", csv_location)
+	csvfile = requests.get(csv_location, stream=True)
+	csvfile.raise_for_status()
+	with open(target, 'wb') as f:
+		csvfile.raw.decode_content = True
+		shutil.copyfileobj(csvfile.raw, f)
+	print("Downloaded as", target)
 
 
 if __name__ == "__main__":

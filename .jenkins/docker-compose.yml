@@ -8,8 +8,8 @@ importer:
   build: ../web
   links:
     - database:database
-  volumes:
-    - /mnt/data/bbga:/app/data
+#  volumes:
+#    - /mnt/data/bbga:/app/data
 #    - ../data:/app/data
   environment:
     DB_NAME: bbga
