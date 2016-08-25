@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'django_jenkins',
     'django_extensions',
 
-    'corsheaders',
-
     'datapunt_generic',
 
     'bbga',
@@ -64,7 +62,6 @@ INSTALLED_APPS = [
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -168,14 +165,6 @@ REST_FRAMEWORK = dict(
     ),
     DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
     COERCE_DECIMAL_TO_STRING=False,
-)
-
-CORS_ORIGIN_ALLOW_ALL = True # if True, the whitelist will not be used and all origins will be accepted
-
-CORS_ORIGIN_REGEX_WHITELIST = (
-    '^(https?://)?localhost(:\d+)?$',
-    '^(https?://)?.*\.datapunt.amsterdam\.nl$',
-    '^(https?://)?.*\.amsterdam\.nl$',
 )
 
 # SWAGGER

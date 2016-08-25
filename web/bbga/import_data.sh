@@ -6,13 +6,12 @@ set -u
 # wait for database to load
 source docker-wait.sh
 
-echo 'unzipping latest bbga file'
+echo 'Download latest BBGA file'
 
-unzip $(ls -Art data/*.zip | tail -n 1) -d /app/unzipped/
+cd /app/data
+python ../download_latest.py
 
 echo 'convert meta data to utf-8'
-
-cd /app/unzipped/
 
 iconv -f WINDOWS-1251 -t UTF-8 -o metadata_utf8.csv metadata.csv
 
@@ -24,13 +23,12 @@ echo 'Clear current data'
 # migrate database tables
 yes yes | python manage.py migrate --noinput
 
-
 echo 'Loading Meta data'
 
-python manage.py run_import /app/unzipped/metadata_utf8.csv  bbga_data_meta
+python manage.py run_import /app/data/metadata_utf8.csv  bbga_data_meta
 
 echo 'Loading bbga cijfers ~1.000.000 row'
 
-python manage.py run_import /app/unzipped/bbga_tableau.csv
+python manage.py run_import /app/data/bbga.csv
 
 echo 'Import BBGA DONE'
