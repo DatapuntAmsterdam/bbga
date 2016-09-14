@@ -23,13 +23,6 @@ node {
         checkout scm
     }
 
-
-    stage ("Build base image") {
-        tryStep "build", {
-            sh "docker-compose build"
-        }
-    }
-
     stage("Test") {
         tryStep "test", {
             sh "docker-compose -p bbga -f .jenkins/docker-compose.yml build"
