@@ -4,6 +4,18 @@ database:
     POSTGRES_PASSWORD: insecure
     POSTGRES_USER: bbga
 
+tests:
+  build: ../web
+  links:
+    - database:database
+  volumes:
+    - ../reports:/app/reports
+  environment:
+    DB_NAME: bbga
+    DB_USER: bbga
+    DB_PASSWORD: insecure
+  command: bash -c "/app/docker-wait.sh && python manage.py jenkins"
+
 importer:
   build: ../web
   links:
