@@ -32,11 +32,12 @@ node {
 
     stage("Test") {
         tryStep "test", {
-            sh "docker-compose run --rm -u root web python manage.py jenkins"
+            sh "docker-compose -p bbga -f .jenkins/docker-compose.yml build"
+            sh "docker-compose -p bbga -f .jenkins/docker-compose.yml run --rm -u root web python manage.py jenkins"
         }, {
             step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
 
-            sh "docker-compose down"
+            sh "docker-compose -p bbga -f .jenkins/docker-compose.yml down"
         }
     }
 
