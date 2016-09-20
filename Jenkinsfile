@@ -39,6 +39,8 @@ node {
             def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/bbga:${env.BUILD_NUMBER}", "web")
             image.push()
             image.push("develop")
+            image.push("acceptance")
+            image.push("Production")
         }
     }
 }
@@ -50,7 +52,6 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
@@ -69,7 +70,7 @@ node {
         def image = docker.image("admin.datapunt.amsterdam.nl:5000/datapunt/bbga:${env.BUILD_NUMBER}")
         image.pull()
 
-            image.push("master")
+            image.push("Production")
             image.push("latest")
         }
     }
@@ -82,7 +83,6 @@ node {
                     parameters: [
                             [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
         }
     }
