@@ -44,6 +44,7 @@ class HybridRouter(routers.DefaultRouter):
         ret.update(self._api_view_urls)
         return ret
 
+
     def get_urls(self):
         urls = super(HybridRouter, self).get_urls()
         for api_view_key in self._api_view_urls.keys():
