@@ -20,11 +20,11 @@ log = logging.getLogger(__name__)
 
 
 def check_data(request):
-    # check bbga
-    try:
-        assert model.objects.count() > 1000000
-    except:
-        log.exception("No enough BBGA data found")
+    """
+    Check health BBGA data
+    """
+    if model.objects.count() < 1000000:
+        log.error("No enough BBGA data found")
         return HttpResponse(
             "No sufficient BBGA data found",
             content_type="text/plain", status=500)

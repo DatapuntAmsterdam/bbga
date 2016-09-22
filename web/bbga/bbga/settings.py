@@ -26,14 +26,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 
-TESTING = sys.argv[1:2] == ['test']
+TESTING = 'test' in sys.argv
 JENKINS = 'jenkins' in sys.argv
 
 # Application definition
