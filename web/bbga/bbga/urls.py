@@ -83,7 +83,7 @@ class HybridRouter(routers.DefaultRouter):
 
 class BBGARouter(HybridRouter):
     """
-    Basisbestand Gebieden Amsterdam
+    Basis Bestand Gebieden Amsterdam
 
     [dashboard](http://www.ois.amsterdam.nl/visualisatie/dashboard_kerncijfers.html)
 
@@ -96,7 +96,9 @@ class BBGARouter(HybridRouter):
         cls = view.cls
 
         class BBGA(cls):
-            pass
+
+            def get_view_name(self):
+                return 'BBGA'
 
         BBGA.__doc__ = self.__doc__
         return BBGA.as_view()

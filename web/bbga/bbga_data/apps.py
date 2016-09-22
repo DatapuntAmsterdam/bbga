@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class BbgaDataConfig(AppConfig):
+class BBGADataConfig(AppConfig):
     name = 'bbga_data'
