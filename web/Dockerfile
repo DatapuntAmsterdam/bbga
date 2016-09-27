@@ -27,4 +27,4 @@ USER datapunt
 
 COPY bbga /app/
 
-CMD /app/docker-entrypoint.sh
+CMD ["/app/docker-run.sh"]

@@ -14,15 +14,12 @@ tests:
     DB_NAME: bbga
     DB_USER: bbga
     DB_PASSWORD: insecure
-  command: bash -c "/app/docker-wait.sh && python manage.py jenkins"
+  command: /app/docker-test.sh
 
 importer:
   build: ../web
   links:
     - database:database
-#  volumes:
-#    - /mnt/data/bbga:/app/data
-#    - ../data:/app/data
   environment:
     DB_NAME: bbga
     DB_USER: bbga
