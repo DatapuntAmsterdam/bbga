@@ -8,8 +8,6 @@ tests:
   build: ../web
   links:
     - database:database
-  volumes:
-    - ../reports:/app/reports
   environment:
     DB_NAME: bbga
     DB_USER: bbga
