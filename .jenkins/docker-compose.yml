@@ -1,5 +1,5 @@
 database:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   environment:
     POSTGRES_PASSWORD: insecure
     POSTGRES_USER: bbga
@@ -27,7 +27,7 @@ importer:
             && bash import_data.sh "
 
 db-backup:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   links:
     - database:db
   volumes:
