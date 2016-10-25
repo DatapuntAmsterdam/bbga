@@ -1,5 +1,5 @@
 database:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   environment:
     POSTGRES_PASSWORD: insecure
     POSTGRES_USER: bbga
@@ -8,21 +8,16 @@ tests:
   build: ../web
   links:
     - database:database
-  volumes:
-    - ../reports:/app/reports
   environment:
     DB_NAME: bbga
     DB_USER: bbga
     DB_PASSWORD: insecure
-  command: bash -c "/app/docker-wait.sh && python manage.py jenkins"
+  command: /app/docker-test.sh
 
 importer:
   build: ../web
   links:
     - database:database
-#  volumes:
-#    - /mnt/data/bbga:/app/data
-#    - ../data:/app/data
   environment:
     DB_NAME: bbga
     DB_USER: bbga
@@ -32,7 +27,7 @@ importer:
             && bash import_data.sh "
 
 db-backup:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   links:
     - database:db
   volumes:
