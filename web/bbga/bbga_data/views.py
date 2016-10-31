@@ -158,6 +158,11 @@ class CijfersViewSet(rest.AtlasViewSet):
 
     bekijk de filter opties
     er kan op jaar, gebiedcode15 en variabele gefiltert worden
+    
+    voorbeeld:
+    
+    https://api-acc.datapunt.amsterdam.nl/bbga/cijfers/?variabele=BEV12_17&gebiedcode15=STAD&jaar=2015
+    
     """
 
     queryset = models.Cijfers.objects.all()
