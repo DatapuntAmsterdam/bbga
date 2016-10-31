@@ -1,5 +1,6 @@
-import re
 import os
+import re
+
 from django.db import connection
 
 BATCH_SIZE = 50000
@@ -11,7 +12,8 @@ def clear_models(*models):
     """
     for model in models:
         # noinspection PyProtectedMember
-        connection.cursor().execute("TRUNCATE {} CASCADE".format(model._meta.db_table))
+        connection.cursor().execute(
+            "TRUNCATE {} CASCADE".format(model._meta.db_table))
 
 
 def get_docker_host():

@@ -3,8 +3,10 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db import connection
+
 try:
     from django.apps import apps
+
     get_model = apps.get_model
 except ImportError:
     from django.db.models.loading import get_model
@@ -24,7 +26,7 @@ def check_data(request):
     Check health BBGA data
     """
     if model.objects.count() < 1000000:
-        log.error("No enough BBGA data found")
+        log.error("Not enough BBGA data found")
         return HttpResponse(
             "No sufficient BBGA data found",
             content_type="text/plain", status=500)

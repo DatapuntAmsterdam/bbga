@@ -1,10 +1,8 @@
-#Python
+# Python
 import os
-from unittest.mock import Mock
-# Packages
+
 from rest_framework.test import APITestCase
-from django.http import HttpResponse
-# Project
+
 from bbga_data import import_data
 from bbga_data import models
 
@@ -42,8 +40,9 @@ class BrowseDatasetsTestCase(APITestCase):
                 'Wrong response code for {}'.format(url))
 
             self.assertEqual(response[
-                'Content-Type'],
-                'application/json', 'Wrong Content-Type for {}'.format(url))
+                                 'Content-Type'],
+                             'application/json',
+                             'Wrong Content-Type for {}'.format(url))
 
             self.assertIn(
                 'count', response.data, 'No count attribute in {}'.format(url))
@@ -61,8 +60,9 @@ class BrowseDatasetsTestCase(APITestCase):
                 'Wrong response code for {}'.format(url))
 
             self.assertEqual(response[
-                'Content-Type'],
-                'application/json', 'Wrong Content-Type for {}'.format(url))
+                                 'Content-Type'],
+                             'application/json',
+                             'Wrong Content-Type for {}'.format(url))
 
     def test_latest_filter(self):
         """
@@ -78,11 +78,11 @@ class BrowseDatasetsTestCase(APITestCase):
             'Wrong response code for {}'.format(url))
 
         self.assertIn(
-                'count', response.data, 'No count attribute in {}'.format(url))
+            'count', response.data, 'No count attribute in {}'.format(url))
 
         self.assertNotEqual(
-                response.data['count'], 0,
-                'Wrong result count for {}'.format(url))
+            response.data['count'], 0,
+            'Wrong result count for {}'.format(url))
 
         latest = response.data['results'][0]['jaar']
 

@@ -1,12 +1,10 @@
 import csv
 import os.path
-
-from tqdm import tqdm
-
 import sys
-from django.contrib.gis.gdal import DataSource
 
+from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import GEOSGeometry, Polygon, MultiPolygon, Point
+from tqdm import tqdm
 
 # sommige WKT-velden zijn best wel groot
 csv.field_size_limit(sys.maxsize)
@@ -24,7 +22,8 @@ def process_wkt(path, filename, callback):
     with open(source) as f:
         rows = csv.reader(f, delimiter='|')
         return [
-            result for result in (callback(row[0], GEOSGeometry(row[1])) for row in rows) if result]
+            result for result in
+            (callback(row[0], GEOSGeometry(row[1])) for row in rows) if result]
 
 
 def process_shp(path, filename, callback, max_count=0):

@@ -1,14 +1,12 @@
 import elasticsearch_dsl as es
 from elasticsearch_dsl import analysis
 
-
 orderings = dict(
     openbare_ruimte=10,
     kadastraal_subject=25,
     adres=50,
     kadastraal_object=100,
 )
-
 
 synonym_filter = analysis.token_filter(
     'synonyms',
@@ -20,7 +18,6 @@ synonym_filter = analysis.token_filter(
         '4e=>vierde',
     ]
 )
-
 
 huisnummer_generate = analysis.char_filter(
     'huisnummer_expand',
@@ -41,7 +38,6 @@ huisnummer_generate = analysis.char_filter(
     """
 )
 
-
 huisnummer_expand = analysis.token_filter(
     'huisnummer_expand',
     type='word_delimiter',
@@ -49,16 +45,14 @@ huisnummer_expand = analysis.token_filter(
     preserve_original=True
 )
 
-
 adres_split = analysis.char_filter(
     'adres_split',
     type='mapping',
     mappings=[
-        "-=>' '",   # strip '-'
-        ".=>' '",   # change '.' to separator
+        "-=>' '",  # strip '-'
+        ".=>' '",  # change '.' to separator
     ]
 )
-
 
 postcode_ngram = analysis.NGramTokenizer(
     name='postcode_ngram',
@@ -67,23 +61,20 @@ postcode_ngram = analysis.NGramTokenizer(
     token_chars=['letter', 'digit']
 )
 
-
 naam_stripper = analysis.char_filter(
     'naam_stripper',
     type='mapping',
     mappings=[
-        "-=>' '",   # change '-' to separator
-        ".=>' '",   # change '.' to separator
+        "-=>' '",  # change '-' to separator
+        ".=>' '",  # change '.' to separator
     ]
 )
-
 
 kadastrale_aanduiding = es.analyzer(
     'kadastrale_aanduiding',
     tokenizer='keyword',
     filter=['standard', 'lowercase']
 )
-
 
 adres = es.analyzer(
     'adres',
@@ -92,7 +83,6 @@ adres = es.analyzer(
     char_filter=[adres_split, huisnummer_generate],
 )
 
-
 naam = es.analyzer(
     'naam',
     tokenizer='standard',
@@ -100,13 +90,12 @@ naam = es.analyzer(
     char_filter=[naam_stripper],
 )
 
-
 postcode = es.analyzer(
     'postcode',
-    #tokenizer='keyword',
+    # tokenizer='keyword',
     tokenizer=postcode_ngram,
     filter=['standard', 'lowercase'],
-    #char_filter=[postcode_stripper],
+    # char_filter=[postcode_stripper],
 )
 
 huisnummer = es.analyzer(
@@ -116,7 +105,6 @@ huisnummer = es.analyzer(
     # token_filter=[huisnummer_expand],
     char_filter=[adres_split, huisnummer_generate],
 )
-
 
 subtype = es.analyzer(
     'subtype',

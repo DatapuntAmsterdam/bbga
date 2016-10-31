@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -16,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cijfers',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('jaar', models.IntegerField(db_index=True)),
                 ('gebiedcode15', models.CharField(db_index=True, max_length=4)),
                 ('variabele', models.CharField(db_index=True, max_length=30)),
@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Meta',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('sort', models.CharField(max_length=5)),
                 ('thema', models.CharField(max_length=30)),
                 ('variabele', models.CharField(max_length=50, unique=True)),
@@ -38,7 +39,8 @@ class Migration(migrations.Migration):
                 ('eenheid', models.IntegerField(null=True)),
                 ('groep', models.CharField(max_length=50, null=True)),
                 ('format', models.CharField(max_length=5, null=True)),
-                ('thema_kleurentabel', models.CharField(max_length=50, null=True)),
+                ('thema_kleurentabel',
+                 models.CharField(max_length=50, null=True)),
                 ('kleurenpalet', models.IntegerField(null=True)),
                 ('minimum_aantal_inwoners', models.IntegerField(null=True)),
                 ('minimum_aantal_woningen', models.IntegerField(null=True)),
@@ -50,6 +52,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterIndexTogether(
             name='cijfers',
-            index_together=set([('jaar', 'gebiedcode15'), ('gebiedcode15', 'variabele')]),
+            index_together=set(
+                [('jaar', 'gebiedcode15'), ('gebiedcode15', 'variabele')]),
         ),
     ]

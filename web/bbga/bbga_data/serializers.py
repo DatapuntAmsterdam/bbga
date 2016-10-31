@@ -14,19 +14,19 @@ class Meta(serializers.ModelSerializer):
 
     class Meta:
         model = models.Meta
+        fields = '__all__'
 
 
 class MetaDetail(BBGAMixin, rest.HALSerializer):
-
     type = serializers.CharField(source='get_type_display')
     _display = rest.DisplayField()
 
     class Meta:
         model = models.Meta
+        fields = '__all__'
 
 
 class Cijfers(serializers.ModelSerializer):
-
     class Meta:
         model = models.Cijfers
         fields = (

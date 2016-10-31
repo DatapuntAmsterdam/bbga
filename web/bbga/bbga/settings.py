@@ -18,7 +18,6 @@ from datapunt_generic.generic.database import get_docker_host
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -27,7 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-#DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,18 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'django_jenkins',
+    'django.contrib.gis',
+    'django.contrib.postgres',
     'django_extensions',
-
     'datapunt_generic',
-
     'bbga',
     'bbga_data',
-
     'rest_framework',
     'rest_framework_swagger',
-
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -91,13 +86,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bbga.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DB_NAME', 'bbga'),
         'USER': os.getenv('DB_NAME', 'bbga'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
@@ -105,7 +99,6 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5406'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -125,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -138,7 +130,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/

@@ -4,4 +4,4 @@ set -u
 set -e
 
 source docker-wait.sh
-exec python manage.py jenkins
+exec python manage.py test

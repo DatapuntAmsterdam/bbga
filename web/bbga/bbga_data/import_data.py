@@ -1,15 +1,12 @@
-
-import sys
 import csv
 import logging
-
+import sys
 from collections import OrderedDict
-
-# settings file names
 
 from django.conf import settings
 from django.db import connection
 from django.db.utils import DataError
+
 from bbga_data.models import Meta, Cijfers
 
 log = logging.getLogger(__name__)
@@ -47,7 +44,6 @@ def print_row(mapping):
 
 
 def import_meta_csv(csv_path, table):
-
     with open(csv_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         # skip header

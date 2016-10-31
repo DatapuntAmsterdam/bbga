@@ -14,14 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf.urls import url, include
-# from django.contrib import admin
-
-from bbga_data import views as bbga_views
-
 import collections
 
-from rest_framework import routers, views, reverse, response
+from django.conf.urls import url, include
+from rest_framework import routers, views, reverse, renderers, schemas, response
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework_swagger.renderers import OpenAPIRenderer
+from rest_framework_swagger.renderers import SwaggerUIRenderer
+
+from bbga_data import views as bbga_views
 
 
 # stack overflow hack
@@ -44,14 +45,13 @@ class HybridRouter(routers.DefaultRouter):
         ret.update(self._api_view_urls)
         return ret
 
-
     def get_urls(self):
         urls = super(HybridRouter, self).get_urls()
         for api_view_key in self._api_view_urls.keys():
             urls.append(self._api_view_urls[api_view_key])
         return urls
 
-    def get_api_root_view(self):
+    def get_api_root_view(self, **kwargs):
         # Copy the following block from Default Router
         api_root_dict = {}
         list_name = self.routes[0].name
@@ -92,12 +92,11 @@ class BBGARouter(HybridRouter):
     Specifieke functionaliteit voor de BBGA API.
     """
 
-    def get_api_root_view(self):
-        view = super().get_api_root_view()
+    def get_api_root_view(self, **kwargs):
+        view = super().get_api_root_view(**kwargs)
         cls = view.cls
 
         class BBGA(cls):
-
             def get_view_name(self):
                 return 'BBGA'
 
@@ -126,20 +125,29 @@ bbga.add_api_view(
     url(r'^gebieden/', bbga_views.meta_gebiedcodes, name='gebieden')
 )
 
-
 bbga.register(
     r'meta', bbga_views.MetaViewSet, base_name='bbga/meta',
 )
-
 
 bbga.register(
     r'cijfers', bbga_views.CijfersViewSet, base_name='bbga/cijfers'
 )
 
 
+@api_view()
+@renderer_classes(
+    [SwaggerUIRenderer, OpenAPIRenderer, renderers.CoreJSONRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(
+        title='BBGA API',
+
+    )
+    return response.Response(generator.get_schema(request=request))
+
+
 # root url
 urlpatterns = [
-    url(r'^bbga/docs/', include('rest_framework_swagger.urls')),
+    url('^bbga/docs/$', schema_view),
     url(r'^bbga/', include(bbga.urls)),
     url(r'^status/', include("datapunt_generic.health.urls"))
 ]

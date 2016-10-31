@@ -1,10 +1,9 @@
+import logging
 import sys
 
 from django.core.management import BaseCommand
 
 from bbga_data import import_data
-
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -20,8 +19,8 @@ class Command(BaseCommand):
 
     """
     tables = [
-            'bbga_data_cijfers',
-            'bbga_data_meta',
+        'bbga_data_cijfers',
+        'bbga_data_meta',
     ]
 
     def add_arguments(self, parser):

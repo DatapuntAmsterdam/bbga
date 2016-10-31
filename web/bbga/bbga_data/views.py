@@ -1,18 +1,16 @@
 # from django.shortcuts import render
 
 # Create your views here.
-from rest_framework.response import Response
+from datetime import date
+
+from django_filters import MethodFilter
+from django_filters.rest_framework.filterset import FilterSet
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from datapunt_generic.generic import rest
 from . import models
 from . import serializers
-
-
-from rest_framework import filters
-import django_filters
-from datetime import date
-
 
 
 @api_view(['GET'])
@@ -113,12 +111,12 @@ class MetaViewSet(rest.AtlasViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class CijfersFilter(filters.FilterSet):
+class CijfersFilter(FilterSet):
     """
     Filter nummeraanduidingkjes
     """
 
-    jaar = django_filters.MethodFilter()
+    jaar = MethodFilter()
 
     class Meta:
         model = models.Cijfers
@@ -129,7 +127,8 @@ class CijfersFilter(filters.FilterSet):
             'jaar',
         ]
 
-    def filter_jaar(self, queryset, value):
+    @staticmethod
+    def filter_jaar(queryset, value):
         if value == 'latest':
             # find value for this year
             year = date.today().year
@@ -141,7 +140,7 @@ class CijfersFilter(filters.FilterSet):
                 if valid:
                     break
                 else:
-                    year = year - 1
+                    year -= 1
                     qs = queryset.filter(jaar=year)
             return qs
 
@@ -171,4 +170,4 @@ class CijfersViewSet(rest.AtlasViewSet):
     filter_class = CijfersFilter
 
     ordering_fields = ('jaar', 'buurt', 'variabele')
-    ordering = ('buurt', 'variabele', 'jaar')
+    ordering = ('-jaar', 'buurt', 'variabele')

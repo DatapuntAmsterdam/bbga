@@ -1,11 +1,10 @@
 import logging
 
-from django.conf import settings
-from elasticsearch import helpers
 import elasticsearch
 import elasticsearch_dsl as es
+from django.conf import settings
+from elasticsearch import helpers
 from elasticsearch_dsl.connections import connections
-
 from tqdm import tqdm
 
 log = logging.getLogger(__name__)
@@ -92,4 +91,3 @@ class CopyIndexTask(object):
 
         log.debug('Backup index %s to %s ', self.index, self.target)
         helpers.reindex(client, self.index, self.target)
-
