@@ -176,6 +176,8 @@ SWAGGER_SETTINGS = {
     ],
 
     'api_key': '',
+    'USE_SESSION_AUTH': False,
+    'VALIDATOR_URL': None,
 
     'is_authenticated': False,
     'is_superuser': False,
