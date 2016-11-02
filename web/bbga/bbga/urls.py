@@ -147,7 +147,7 @@ def schema_view(request):
 
 # root url
 urlpatterns = [
-    url('^bbga/docs/api-docs$', schema_view),
+    url('^bbga/docs/api-docs/$', schema_view),
     url(r'^bbga/', include(bbga.urls)),
     url(r'^status/', include("datapunt_generic.health.urls"))
 ]
