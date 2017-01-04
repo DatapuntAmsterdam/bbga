@@ -129,13 +129,16 @@ class CijfersFilter(FilterSet):
 
     @staticmethod
     def filter_jaar(queryset, value):
+        """ TODO: Why not select the MAX year rather than loop starting at the
+                  current year?
+        """
         if value == 'latest':
             # find value for this year
             year = date.today().year
             qs = queryset.filter(jaar=year)
             # check if we have data or go
             # up to 3 years back!!
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 valid = qs.count()
                 if valid:
                     break

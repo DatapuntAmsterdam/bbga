@@ -1,6 +1,8 @@
 # Python
 import os
 
+from datetime import date
+
 from rest_framework.test import APITestCase
 
 from bbga_data import import_data
@@ -68,54 +70,48 @@ class BrowseDatasetsTestCase(APITestCase):
         """
         test latest filtering
         """
-        url = 'bbga/cijfers'
+        path = 'bbga/cijfers'
         params = '?jaar=latest&gebiedcode15=STAD&variabele=BEV0_3'
+        url = '/{}/{}'.format(path, params)
 
-        response = self.client.get('/{}/{}'.format(url, params))
+        response = self.client.get(url)
 
         self.assertEqual(
             response.status_code, 200,
             'Wrong response code for {}'.format(url))
 
-        self.assertIn(
-            'count', response.data, 'No count attribute in {}'.format(url))
+        self.assertIn('count', response.data,
+                      msg='No count attribute in {}'.format(url))
 
-        self.assertNotEqual(
-            response.data['count'], 0,
-            'Wrong result count for {}'.format(url))
+        self.assertTrue(response.data['count'] > 0,
+                        msg='Wrong result count for {}'.format(url))
 
         latest = response.data['results'][0]['jaar']
+        year_now = date.today().year
 
-        c1 = models.Cijfers.objects.get(jaar=latest, variabele='BEV0_3')
-        c2 = models.Cijfers.objects.get(jaar=latest - 1, variabele='BEV0_3')
-        c3 = models.Cijfers.objects.get(jaar=latest - 2, variabele='BEV0_3')
+        self.assertTrue(
+            latest >= year_now-2,
+            msg="Testdata is too old (latest year={})".format(latest))
 
-        c1.delete()
-        c2.delete()
-        c3.delete()
+        for year in range(year_now-2, latest+1):
+            models.Cijfers.objects.get(jaar=year, variabele='BEV0_3').delete()
 
-        response = self.client.get('/{}/{}'.format(url, params))
+        response = self.client.get(url)
+
+        self.assertTrue(response.data['count'] > 0,
+                        msg='Wrong result count for {}'.format(url))
 
         old = response.data['results'][0]['jaar']
 
-        self.assertEqual(latest - 3, old)
+        self.assertEqual(year_now - 3, old)
 
-        # check for 2016
-        #
-        # models.
-        # remove object jaar and jaar-1
-
-        # get latests
-
-        # = jaar - 3
-
-    def test_health(self):
+    def test_data(self):
         """
         Health is only ok (200) with more the 1.000.000 records.
         so we should expect bad health on test set
         """
-        response = self.client.get('/status/health')
+        response = self.client.get('/status/data')
 
         self.assertEqual(
             response.status_code, 500,
-            'Wrong response code for health')
+            'Wrong response code for /status/data')
