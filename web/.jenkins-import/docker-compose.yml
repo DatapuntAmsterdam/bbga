@@ -5,7 +5,7 @@ database:
     POSTGRES_USER: bbga
 
 importer:
-  build: ../web
+  image: build.datapunt.amsterdam.nl:5000/datapunt/bbga:${ENVIRONMENT}
   links:
     - database:database
   environment:
