@@ -1,0 +1,15 @@
+database:
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+  environment:
+    POSTGRES_PASSWORD: insecure
+    POSTGRES_USER: bbga
+
+tests:
+  build: ../web
+  links:
+    - database:database
+  environment:
+    DB_NAME: bbga
+    DB_USER: bbga
+    DB_PASSWORD: insecure
+  command: /app/docker-test.sh
