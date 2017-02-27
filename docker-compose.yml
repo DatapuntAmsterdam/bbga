@@ -18,4 +18,5 @@ web:
   environment:
     SECRET_KEY: hoi
     DB_NAME: bbga
+    DB_USER: bbga
     DB_PASSWORD: insecure
