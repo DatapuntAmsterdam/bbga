@@ -7,7 +7,7 @@ import shutil
 
 import requests
 
-METADATA_URL = 'https://api.datapunt.amsterdam.nl/catalogus/api/3/action/package_show?id=b51154d8-2eca-4dd9-932d-63bca9ef0bf2&dtfs=T&mpb=topografie&mpz=9&mpv=52.3719:4.9012'
+METADATA_URL = 'https://api.data.amsterdam.nl/catalogus/api/3/action/package_show?id=b51154d8-2eca-4dd9-932d-63bca9ef0bf2&dtfs=T&mpb=topografie&mpz=9&mpv=52.3719:4.9012'
 
 
 def download():

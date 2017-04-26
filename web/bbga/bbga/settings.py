@@ -161,7 +161,7 @@ REST_FRAMEWORK = dict(
 
 # SWAGGER
 
-swag_path = 'api-acc.datapunt.amsterdam.nl/bbga/docs'
+swag_path = 'acc.api.data.amsterdam.nl/bbga/docs'
 
 if DEBUG:
     swag_path = '127.0.0.1:8000/bbga/docs'
