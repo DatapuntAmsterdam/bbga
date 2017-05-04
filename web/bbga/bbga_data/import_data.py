@@ -13,7 +13,11 @@ log = logging.getLogger(__name__)
 
 
 def to_int(value):
-    return value if value != '.' else 0
+    if not value:
+        return 0
+    if value == '.':
+        return 0
+    return value
 
 
 def meta_row_mapping(row):
@@ -28,26 +32,30 @@ def meta_row_mapping(row):
         ('verschijningsfrequentie', row[7]),
         ('eenheid', to_int(row[8])),
         ('groep', row[9]),
-        ('format', row[10]),
-        ('thema_kleurentabel', row[11]),
-        ('kleurenpalet', to_int(row[12])),
-        ('minimum_aantal_inwoners', to_int(row[13])),
-        ('minimum_aantal_woningen', to_int(row[14]))
+        ('format', row[10]),  # 'K'
+        ('thema_kleurentabel', row[12]),
+        ('kleurenpalet', to_int(row[13])),
+        ('minimum_aantal_inwoners', to_int(row[14])),
+        ('minimum_aantal_woningen', to_int(row[15]))
     ])
 
 
 def print_row(mapping):
+    print('\n\n%30s %40s %10s\n' % ('map', 'rowvalue', 'length'))
     for k, v in mapping.items():
-        mv = v[:30] if type(v) == str else 0
-        l = len(v) if type(v) == str else 0
+        mv = v[:30] if isinstance(v, str) else 0
+        l = len(v) if isinstance(v, str) else 0
         print('%30s %40s %10s' % (k, mv, l))
 
 
-def import_meta_csv(csv_path, table):
+def import_meta_csv(csv_path, _table):
     with open(csv_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         # skip header
+
         headers = next(reader, None)
+
+        Meta.objects.all().delete()
 
         if settings.DEBUG:
             for i, item in enumerate(headers):
@@ -55,13 +63,17 @@ def import_meta_csv(csv_path, table):
 
         for i, row in enumerate(reader):
             try:
-                _, created = Meta.objects.get_or_create(
+                _, _created = Meta.objects.get_or_create(
                     **meta_row_mapping(row)
                 )
-            except(ValueError, DataError):
+            except(ValueError, DataError) as e:
+                log.error(e)
                 log.error(row)
+                for ir, v in enumerate(row):
+                    print(ir, v)
                 print_row(meta_row_mapping(row))
-                sys.exit(1)
+                if i > 3:
+                    sys.exit(1)
 
 
 def import_variable_csv(csv_file, table):

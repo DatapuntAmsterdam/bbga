@@ -17,15 +17,8 @@ def clear_models(*models):
 
 
 def get_docker_host():
-    # TODO:
     """
-    integrate this (postactivate virtualenv) bash code here?
-
-    DB_DOCKER_NAME='kartoza/postgis'
-    CONTAINER=$(docker ps | grep $DB_DOCKER_NAME | awk '{ print $1 }')
-    DOCKER_HOST=$(docker inspect $CONTAINER | grep IPAddress | awk '{ print $2 }' | tr -d ',"' | tr -d 'null')
-
-    export
+    Find host ip
     """
     d_host = os.getenv('DOCKER_HOST', None)
     if d_host:

@@ -58,7 +58,6 @@ class Command(BaseCommand):
         elif table == 'bbga_data_cijfers':
             # tableaux export (clean)
             import_data.import_variable_csv(csv, table)
-
         else:
             log.error('nothing imported')
             sys.exit(1)

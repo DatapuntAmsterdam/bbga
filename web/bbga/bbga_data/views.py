@@ -3,7 +3,7 @@
 # Create your views here.
 from datetime import date
 
-from django_filters import MethodFilter
+from django_filters.rest_framework import filters
 from django_filters.rest_framework.filterset import FilterSet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,7 +14,7 @@ from . import serializers
 
 
 @api_view(['GET'])
-def meta_groepen(request):
+def meta_groepen(_request):
     """
     Lijst van groepen
     """
@@ -29,7 +29,7 @@ def meta_groepen(request):
 
 
 @api_view(['GET'])
-def meta_themas(request):
+def meta_themas(_request):
     """
     Lijst met gebruikte thema's
     """
@@ -42,7 +42,7 @@ def meta_themas(request):
 
 
 @api_view(['GET'])
-def meta_variabelen(request):
+def meta_variabelen(_request):
     """
     Lijst met gebruikte variabelen
     """
@@ -56,7 +56,7 @@ def meta_variabelen(request):
 
 
 @api_view(['GET'])
-def meta_gebiedcodes(request):
+def meta_gebiedcodes(_request):
     """
     Lijst met gebruikte gebiedscodes
     """
@@ -81,42 +81,13 @@ class MetaViewSet(rest.AtlasViewSet):
     serializer_detail_class = serializers.MetaDetail
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
-    def list(self, request, *args, **kwargs):
-        """
-        Metadata
-
-        ---
-        parameters:
-            - name: variabele
-              description: filter op variabele
-              required: False
-              type: string
-              paramType: query
-            - name: groep
-              description: filter op groep
-              required: False
-              type: string
-              paramType: query
-            - name: thema
-              description: filter op thema
-              required: False
-              type: string
-              paramType: query
-            - name: bron
-              description: filter op bron
-              required: False
-              type: string
-              paramType: query
-        """
-        return super().list(request, *args, **kwargs)
-
 
 class CijfersFilter(FilterSet):
     """
     Filter nummeraanduidingkjes
     """
 
-    jaar = MethodFilter()
+    jaar = filters.CharFilter(method='filter_jaar')
 
     class Meta:
         model = models.Cijfers
@@ -127,8 +98,7 @@ class CijfersFilter(FilterSet):
             'jaar',
         ]
 
-    @staticmethod
-    def filter_jaar(queryset, value):
+    def filter_jaar(self, queryset, _name, value):
         """ TODO: Why not select the MAX year rather than loop starting at the
                   current year?
         """

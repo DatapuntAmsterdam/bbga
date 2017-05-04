@@ -26,7 +26,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-# DEBUG = True
+
+if SECRET_KEY == 'insecure':
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -39,11 +41,7 @@ JENKINS = 'jenkins' in sys.argv
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'django.contrib.postgres',
@@ -56,13 +54,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -100,27 +93,6 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -135,9 +107,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login'
-
 INTERNAL_IPS = ['127.0.0.1']
 
 HEALTH_MODEL = 'bbga_data.Cijfers'
@@ -145,10 +114,11 @@ HEALTH_MODEL = 'bbga_data.Cijfers'
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
     MAX_PAGINATE_BY=100,
-    DEFAULT_AUTHENTICATION_CLASSES=(
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
+
+    UNAUTHENTICATED_USER=None,
+    UNAUTHENTICATED_TOKE=None,
+
+
     DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
     DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
     DEFAULT_RENDERER_CLASSES=(
@@ -182,7 +152,6 @@ SWAGGER_SETTINGS = {
     'is_authenticated': False,
     'is_superuser': False,
 
-    'unauthenticated_user': 'django.contrib.auth.models.AnonymousUser',
     'permission_denied_handler': None,
     'resource_access_handler': None,
 

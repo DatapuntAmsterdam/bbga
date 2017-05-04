@@ -16,8 +16,8 @@ def download():
     metadata_res.raise_for_status()
 
     metadata = metadata_res.json()
-    download_csv(metadata['result']['resources'][1]['url'], 'bbga.csv')
-    download_csv(metadata['result']['resources'][2]['url'], 'metadata.csv')
+    download_csv(metadata['result']['resources'][1]['url'], '/app/data/bbga.csv')
+    download_csv(metadata['result']['resources'][2]['url'], '/app/data/metadata.csv')
 
 
 def download_csv(csv_location, target):
