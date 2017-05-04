@@ -32,7 +32,7 @@ Importing data
 
 ####
 
->   docker-compose run python manage.py migrate
+>   docker-compose run web ./manage.py migrate
 
 >   docker-compose run web bash import_data.sh
 
