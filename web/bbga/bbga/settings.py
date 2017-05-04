@@ -116,8 +116,7 @@ REST_FRAMEWORK = dict(
     MAX_PAGINATE_BY=100,
 
     UNAUTHENTICATED_USER=None,
-    UNAUTHENTICATED_TOKE=None,
-
+    UNAUTHENTICATED_TOKEN=None,
 
     DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
     DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
