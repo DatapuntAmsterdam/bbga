@@ -7,9 +7,10 @@ database:
 tests:
   build: ../web
   links:
-    - database:database
+    - database
   environment:
     DB_NAME: bbga
     DB_USER: bbga
     DB_PASSWORD: insecure
-  command: /app/docker-test.sh
+  command: >
+    bash -c "./docker-wait.sh && ./docker-test.sh"
