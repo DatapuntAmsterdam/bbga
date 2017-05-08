@@ -18,7 +18,11 @@ def clear_models(*models):
 
 def get_docker_host():
     """
-    Find host ip
+    Looks for the DOCKER_HOST environment variable to find the VM
+    running docker-machine.
+
+    If the environment variable is not found, it is assumed that
+    you're running docker on localhost.
     """
     d_host = os.getenv('DOCKER_HOST', None)
     if d_host:
@@ -27,3 +31,15 @@ def get_docker_host():
 
         return re.match(r'tcp://(.*?):\d+', d_host).group(1)
     return 'localhost'
+
+
+def in_docker():
+    """
+    Checks pid 1 cgroup settings to check with reasonable certainty we're in a
+    docker env.
+    :return: true when running in a docker container, false otherwise
+    """
+    try:
+        return ':/docker/' in open('/proc/1/cgroup', 'r').read()
+    except:
+        return False

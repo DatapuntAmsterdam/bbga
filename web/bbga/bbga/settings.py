@@ -13,30 +13,50 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import sys
 
-from datapunt_generic.generic.database import get_docker_host
+from datapunt_generic.generic.database import get_docker_host, in_docker
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+OVERRIDE_HOST_ENV_VAR = 'DATABASE_HOST_OVERRIDE'
+OVERRIDE_PORT_ENV_VAR = 'DATABASE_PORT_OVERRIDE'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+DIVA_DIR = '/app/data'
+
+if not os.path.exists(DIVA_DIR):
+    DIVA_DIR = os.path.abspath(os.path.join(PROJECT_DIR, 'diva'))
+    print("Geen lokale DIVA bestanden gevonden, maak gebruik van testset",
+          DIVA_DIR, "\n")
+
+
+class Location_key:
+    local = 'local'
+    docker = 'docker'
+    override = 'override'
+
+
+def get_database_key():
+    if os.getenv(OVERRIDE_HOST_ENV_VAR):
+        return Location_key.override
+    elif in_docker():
+        return Location_key.docker
+
+    return Location_key.local
+
+
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = SECRET_KEY == 'default-secret'
 
-if SECRET_KEY == 'insecure':
-    DEBUG = True
+NO_INTEGRATION_TESTS = True
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
-
-TESTING = 'test' in sys.argv
-JENKINS = 'jenkins' in sys.argv
+DATAPUNT_API_URL = os.getenv(
+    # note the ending /
+    'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 
 # Application definition
 
@@ -80,17 +100,38 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bbga.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+DATABASE_OPTIONS = {
+    Location_key.docker: {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'bbga'),
         'USER': os.getenv('DB_USER', 'bbga'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
-        'HOST': os.getenv('DATABASE_PORT_5432_TCP_ADDR', get_docker_host()),
-        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5406'),
-    }
+        'HOST': 'database',
+        'PORT': '5432'
+    },
+    Location_key.local: {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.getenv('DB_NAME', 'bbga'),
+        'USER': os.getenv('DB_USER', 'bbga'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'HOST': get_docker_host(),
+        'PORT': '5401'
+    },
+    Location_key.override: {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.getenv('DB_NAME', 'bbga'),
+        'USER': os.getenv('DB_USER', 'bbga'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'HOST': os.getenv(OVERRIDE_HOST_ENV_VAR),
+        'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432')
+    },
+}
+
+DATABASES = {
+    'default': DATABASE_OPTIONS[get_database_key()]
 }
 
 LANGUAGE_CODE = 'en-us'
@@ -105,6 +146,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
 
 
 INTERNAL_IPS = ['127.0.0.1']
