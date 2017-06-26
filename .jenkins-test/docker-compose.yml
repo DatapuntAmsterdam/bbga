@@ -1,16 +1,18 @@
-database:
-  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-  environment:
-    POSTGRES_PASSWORD: insecure
-    POSTGRES_USER: bbga
+version: '3.0'
+services:
+  database:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: bbga
 
-tests:
-  build: ../web
-  links:
-    - database
-  environment:
-    DB_NAME: bbga
-    DB_USER: bbga
-    DB_PASSWORD: insecure
-  command: >
-    bash -c "./docker-wait.sh && ./docker-test.sh"
+  tests:
+    build: ../web
+    links:
+      - database
+    environment:
+      DB_NAME: bbga
+      DB_USER: bbga
+      DB_PASSWORD: insecure
+    command: >
+      bash -c "./docker-wait.sh && ./docker-test.sh"
