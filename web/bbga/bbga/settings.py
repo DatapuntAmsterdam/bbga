@@ -207,7 +207,7 @@ SWAGGER_SETTINGS = {
         'description': 'This is the BBGA API server.',
         'license': 'license Not known yet.',
         'licenseUrl': '://www.amsterdam.nl/stelselpedia/',
-        'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
+        'termsOfServiceUrl': 'https://data.amsterdam.nl/terms/',
         'title': 'BBGA',
     },
 
