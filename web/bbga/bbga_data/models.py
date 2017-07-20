@@ -6,6 +6,7 @@ from django.db import models
 
 class Meta(models.Model):
     """
+    Meta data van cijfers tabel
     """
     sort = models.CharField(max_length=5)
     thema = models.CharField(max_length=30)
@@ -24,9 +25,13 @@ class Meta(models.Model):
     minimum_aantal_inwoners = models.IntegerField(null=True)
     minimum_aantal_woningen = models.IntegerField(null=True)
 
+    symbool = models.CharField(max_length=30, null=True)
+    legendacode = models.CharField(max_length=30, null=True)
+
 
 class Cijfers(models.Model):
     """
+    Alle BBGA cijfers
     """
     jaar = models.IntegerField(db_index=True)
     gebiedcode15 = models.CharField(db_index=True, max_length=4)

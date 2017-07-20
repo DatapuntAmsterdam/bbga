@@ -5,6 +5,7 @@ from collections import OrderedDict
 
 from django.conf import settings
 from django.db import connection
+from django.core.exceptions import FieldError
 from django.db.utils import DataError
 
 from bbga_data.models import Meta, Cijfers
@@ -22,30 +23,36 @@ def to_int(value):
 
 def meta_row_mapping(row):
     return OrderedDict([
-        ('sort', row[0]),
-        ('thema', row[1]),
-        ('variabele', row[2]),
-        ('label', row[3]),
-        ('definitie', row[4]),
-        ('bron', row[5]),
-        ('peildatum', row[6]),
-        ('verschijningsfrequentie', row[7]),
-        ('eenheid', to_int(row[8])),
-        ('groep', row[9]),
-        ('format', row[10]),  # 'K'
-        ('thema_kleurentabel', row[12]),
-        ('kleurenpalet', to_int(row[13])),
-        ('minimum_aantal_inwoners', to_int(row[14])),
-        ('minimum_aantal_woningen', to_int(row[15]))
+        ('sort', row['sort']),
+        ('thema', row['thema']),
+        ('variabele', row['variabele']),
+        ('label', row['label']),
+        ('definitie', row['definitie']),
+        ('bron', row['bron']),
+        ('peildatum', row['peildatum']),
+        ('verschijningsfrequentie', row['verschijningsfrequentie']),
+        ('eenheid', to_int(row['rekeneenheid'])),
+        ('symbool', row['symbool']),
+        ('groep', row['groep']),
+        ('format', row['format']),  # 'K'
+        ('thema_kleurentabel', row['thema kerncijfertabel']),
+        ('kleurenpalet', to_int(row['kleurenpalet'])),
+        ('legendacode', to_int(row['legendacode'])),
+        ('minimum_aantal_inwoners', to_int(row['sd minimum bevtotaal'])),
+        ('minimum_aantal_woningen', to_int(row['sd minimum wvoorrbag']))
     ])
 
 
 def print_row(mapping):
     print('\n\n%30s %40s %10s\n' % ('map', 'rowvalue', 'length'))
-    for k, v in mapping.items():
+    for i, (k, v) in enumerate(mapping.items()):
         mv = v[:30] if isinstance(v, str) else 0
         l = len(v) if isinstance(v, str) else 0
-        print('%30s %40s %10s' % (k, mv, l))
+        print('%2d %30s %40s %10s' % (i, k, mv, l))
+
+
+def create_row_mapping(headers, row):
+    return {k.lower(): v for k, v in zip(headers, row)}
 
 
 def import_meta_csv(csv_path, _table):
@@ -62,16 +69,25 @@ def import_meta_csv(csv_path, _table):
                 print(i, item)
 
         for i, row in enumerate(reader):
+
+            rowdata = create_row_mapping(headers, row)
+
             try:
                 _, _created = Meta.objects.get_or_create(
-                    **meta_row_mapping(row)
+                    **meta_row_mapping(rowdata)
                 )
-            except(ValueError, DataError) as e:
+            except(ValueError, DataError, FieldError) as e:
                 log.error(e)
                 log.error(row)
-                for ir, v in enumerate(row):
-                    print(ir, v)
-                print_row(meta_row_mapping(row))
+
+                for ir, (h, v) in enumerate(zip(headers, row)):
+                    print('%2s %35s : %s' % (i, h, v))
+
+                log.debug('Parsed Row mapping')
+                print_row(meta_row_mapping(rowdata))
+                log.debug('Actual Row mapping')
+                print_row(rowdata)
+
                 if i > 3:
                     sys.exit(1)
 
