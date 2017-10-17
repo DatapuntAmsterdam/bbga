@@ -32,7 +32,6 @@ services:
                           -Fc \
                           -t bbga* \
                           -T django*  \
-                          -T auth*    \
                           -U bbga \
                           -h db -p 5432 \
                           bbga > /tmp/backups/database.dump"
