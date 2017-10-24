@@ -1,7 +1,10 @@
 from collections import OrderedDict
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import renderers, serializers, pagination, response, \
-    viewsets, filters, reverse
+    viewsets
+
 from rest_framework.reverse import reverse
 from rest_framework.utils.urls import replace_query_param
 from rest_framework_extensions.mixins import DetailSerializerMixin
@@ -79,7 +82,7 @@ class HALPagination(pagination.PageNumberPagination):
 class AtlasViewSet(DetailSerializerMixin, viewsets.ReadOnlyModelViewSet):
     renderer_classes = DEFAULT_RENDERERS
     pagination_class = HALPagination
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,)
 
 
 class RelatedSummaryField(serializers.Field):

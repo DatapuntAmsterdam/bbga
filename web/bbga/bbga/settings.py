@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'bbga_data',
     'rest_framework',
     'rest_framework_swagger',
+    'django_filters',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -106,7 +107,7 @@ DATABASE_OPTIONS = {
         'USER': os.getenv('DB_USER', 'bbga'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
-        'PORT': '5401'
+        'PORT': '5406'
     },
     Location_key.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -157,7 +158,8 @@ REST_FRAMEWORK = dict(
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
-    DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
+    DEFAULT_FILTER_BACKENDS=(
+        'django_filters.rest_framework.DjangoFilterBackend',),
     COERCE_DECIMAL_TO_STRING=False,
 )
 
