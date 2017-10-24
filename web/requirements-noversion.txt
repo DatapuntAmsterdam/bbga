@@ -31,6 +31,5 @@ simplejson
 six
 sphinx-me
 sqlparse
-tqdm
 uritemplate
 urllib3

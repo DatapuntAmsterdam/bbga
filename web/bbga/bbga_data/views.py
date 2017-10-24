@@ -79,6 +79,7 @@ class MetaViewSet(rest.AtlasViewSet):
     queryset = models.Meta.objects.all()
     serializer_class = serializers.Meta
     serializer_detail_class = serializers.MetaDetail
+
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
 
