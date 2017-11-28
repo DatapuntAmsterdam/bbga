@@ -12,7 +12,7 @@ python download_latest.py
 
 echo 'convert meta data to utf-8'
 
-iconv -f WINDOWS-1251 -t UTF-8 -o /app/data/metadata_utf8.csv /app/data/metadata.csv
+iconv -f iso-8859-1 -t UTF-8 -o /app/data/metadata_utf8.csv /app/data/metadata.csv
 
 echo 'Clear current data'
 
