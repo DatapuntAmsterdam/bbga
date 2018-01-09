@@ -10,7 +10,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
-from datapunt_generic.generic.database import get_docker_host, in_docker
+from bbga.settings_databases import get_docker_host
+from bbga.settings_databases import get_database_key
+from bbga.settings_databases import LocationKey
 
 OVERRIDE_HOST_ENV_VAR = 'DATABASE_HOST_OVERRIDE'
 OVERRIDE_PORT_ENV_VAR = 'DATABASE_PORT_OVERRIDE'
@@ -21,22 +23,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 DIVA_DIR = '/app/data'
-
-
-class Location_key:
-    local = 'local'
-    docker = 'docker'
-    override = 'override'
-
-
-def get_database_key():
-    if os.getenv(OVERRIDE_HOST_ENV_VAR):
-        return Location_key.override
-    elif in_docker():
-        return Location_key.docker
-
-    return Location_key.local
-
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
@@ -58,12 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django.contrib.postgres',
     'django_extensions',
-    'datapunt_generic',
+    'datapunt_api',
     'bbga',
     'bbga_data',
     'rest_framework',
     'rest_framework_swagger',
     'django_filters',
+    'health',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -93,7 +80,7 @@ WSGI_APPLICATION = 'bbga.wsgi.application'
 
 
 DATABASE_OPTIONS = {
-    Location_key.docker: {
+    LocationKey.docker: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'bbga'),
         'USER': os.getenv('DB_USER', 'bbga'),
@@ -101,7 +88,7 @@ DATABASE_OPTIONS = {
         'HOST': 'database',
         'PORT': '5432'
     },
-    Location_key.local: {
+    LocationKey.local: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'bbga'),
         'USER': os.getenv('DB_USER', 'bbga'),
@@ -109,7 +96,7 @@ DATABASE_OPTIONS = {
         'HOST': get_docker_host(),
         'PORT': '5406'
     },
-    Location_key.override: {
+    LocationKey.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'bbga'),
         'USER': os.getenv('DB_USER', 'bbga'),

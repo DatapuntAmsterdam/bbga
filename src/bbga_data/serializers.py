@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from datapunt_generic.generic import rest
+from datapunt_api import rest
 from . import models
 
 

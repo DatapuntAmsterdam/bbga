@@ -8,7 +8,7 @@ from django_filters.rest_framework.filterset import FilterSet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from datapunt_generic.generic import rest
+from datapunt_api import rest
 from . import models
 from . import serializers
 
@@ -76,7 +76,7 @@ class MetaViewSet(rest.AtlasViewSet):
     Lijst met alle Meta-data gebruikt in BBGA
     """
 
-    queryset = models.Meta.objects.all()
+    queryset = models.Meta.objects.all().order_by('id')
     serializer_class = serializers.Meta
     serializer_detail_class = serializers.MetaDetail
 
@@ -138,7 +138,7 @@ class CijfersViewSet(rest.AtlasViewSet):
 
     """
 
-    queryset = models.Cijfers.objects.all()
+    queryset = models.Cijfers.objects.all().order_by('id')
     serializer_class = serializers.Cijfers
     serializer_detail_class = serializers.CijferDetail
     filter_class = CijfersFilter

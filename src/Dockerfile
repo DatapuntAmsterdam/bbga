@@ -8,14 +8,21 @@ EXPOSE 8000
 RUN mkdir -p /app/data \
     && chown datapunt /app/data
 
-WORKDIR /app
-
-COPY .jenkins/docker-migrate.sh /app/
 
 COPY requirements.txt /app/
+
+WORKDIR /app/
+
 RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /app/
 
+RUN mkdir -p /static && chown datapunt /static
+
+ENV DJANGO_SETTINGS_MODULE=bbga.settings
+
 USER datapunt
+
+RUN python manage.py collectstatic
 
 CMD uwsgi
