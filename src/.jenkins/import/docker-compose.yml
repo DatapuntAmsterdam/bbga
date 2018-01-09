@@ -1,0 +1,23 @@
+version: '3.0'
+services:
+  database:
+    image: amsterdam/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: bbga
+    volumes:
+      - ./backups:/tmp/backups
+
+  importer:
+#    image: build.datapunt.amsterdam.nl:5000/datapunt/bbga:${ENVIRONMENT}
+    build: ../../
+    links:
+      - database:database
+    environment:
+      DB_NAME: bbga
+      DB_USER: bbga
+      DB_PASSWORD: insecure
+      DATAPUNT_API_URL:
+    command: >
+      bash -c "cd .jenkins/import \
+          && ./import_data.sh"

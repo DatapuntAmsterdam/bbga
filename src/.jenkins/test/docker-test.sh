@@ -3,5 +3,4 @@
 set -u
 set -e
 
-# run uwsgi
-exec uwsgi
+cd ../../bbga && ./manage.py test

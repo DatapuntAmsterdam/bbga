@@ -3,9 +3,6 @@
 set -e
 set -u
 
-# wait for database to load
-source docker-wait.sh
-
 echo 'Download latest BBGA file'
 
 python download_latest.py
@@ -18,6 +15,8 @@ echo 'Clear current data'
 
 #python manage.py migrate bbga_data zero
 # migrate database tables
+
+cd ../../bbga
 
 yes yes | python manage.py migrate --noinput
 

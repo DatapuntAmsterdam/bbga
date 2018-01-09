@@ -24,16 +24,16 @@ node {
 
     stage("Test") {
         tryStep "test", {
-            sh "docker-compose -p bbga -f .jenkins-test/docker-compose.yml build && " +
-               "docker-compose -p bbga -f .jenkins-test/docker-compose.yml run -u root --rm tests"
+            sh "docker-compose -p bbga -f src/.jenkins/test/docker-compose.yml build && " +
+               "docker-compose -p bbga -f src/.jenkins/test/docker-compose.yml run -u root --rm tests"
         }, {
-            sh "docker-compose -p bbga -f .jenkins-test/docker-compose.yml down"
+            sh "docker-compose -p bbga -f src/.jenkins/test/docker-compose.yml down"
         }
     }
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/bbga:${env.BUILD_NUMBER}", "web")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/bbga:${env.BUILD_NUMBER}", "src")
             image.push()
         }
     }

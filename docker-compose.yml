@@ -9,8 +9,8 @@ services:
       POSTGRES_DB: bbga
       POSTGRES_USER: bbga
 
-  web:
-    build: ./web
+  bbga:
+    build: src
     ports:
       - "8000"
     links:
