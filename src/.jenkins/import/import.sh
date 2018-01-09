@@ -22,7 +22,7 @@ dc build
 dc up -d database
 dc run importer .jenkins/docker-wait.sh
 
-dc run --rm importer
+dc run --rm importer ./import_data.sh
 
 echo "Running backups"
 dc exec -T database backup-db.sh bbga

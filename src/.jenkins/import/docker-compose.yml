@@ -18,6 +18,3 @@ services:
       DB_USER: bbga
       DB_PASSWORD: insecure
       DATAPUNT_API_URL:
-    command: >
-      bash -c "cd .jenkins/import \
-          && ./import_data.sh"

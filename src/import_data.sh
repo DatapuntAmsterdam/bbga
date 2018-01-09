@@ -2,6 +2,7 @@
 
 set -e
 set -u
+set -x
 
 echo 'Download latest BBGA file'
 
@@ -15,8 +16,6 @@ echo 'Clear current data'
 
 #python manage.py migrate bbga_data zero
 # migrate database tables
-
-cd ../../bbga
 
 yes yes | python manage.py migrate --noinput
 
