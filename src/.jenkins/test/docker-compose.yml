@@ -14,8 +14,4 @@ services:
       DB_NAME: bbga
       DB_USER: bbga
       DB_PASSWORD: insecure
-    command: >
-      bash -c "cd .jenkins \
-              && ./docker-wait.sh \
-              && cd test \
-              && ./docker-test.sh"
+    command: .jenkins/test/docker-test.sh

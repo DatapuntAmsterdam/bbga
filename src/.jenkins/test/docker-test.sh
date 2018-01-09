@@ -2,5 +2,8 @@
 
 set -u
 set -e
+set -x
 
-cd ../../bbga && ./manage.py test
+.jenkins/docker-wait.sh
+
+./manage.py test
