@@ -2,6 +2,6 @@
 
 set -u
 set -e
+set -x
 
-cd bbga
 yes yes | python manage.py migrate --noinput
