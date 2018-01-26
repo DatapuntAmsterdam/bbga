@@ -32,9 +32,9 @@ Importing data
 
 ####
 
->   docker-compose run web ./manage.py migrate
+>   docker-compose run bbga ./manage.py migrate
 
->   docker-compose run web bash import_data.sh
+>   docker-compose run bbga bash import_data.sh
 
 
 ### variables
