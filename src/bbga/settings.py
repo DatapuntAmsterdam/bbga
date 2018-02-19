@@ -32,8 +32,6 @@ NO_INTEGRATION_TESTS = True
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 DATAPUNT_API_URL = os.getenv(
     # note the ending /
     'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
@@ -57,8 +55,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'bbga.urls'
 
