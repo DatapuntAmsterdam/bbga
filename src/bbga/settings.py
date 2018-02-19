@@ -32,6 +32,8 @@ NO_INTEGRATION_TESTS = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 DATAPUNT_API_URL = os.getenv(
     # note the ending /
     'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'datapunt_api',
     'bbga',
     'bbga_data',
+    'corsheaders',
     'rest_framework',
     'rest_framework_swagger',
     'django_filters',
