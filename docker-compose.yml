@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: insecure
       POSTGRES_DB: bbga
       POSTGRES_USER: bbga
+    volumes:
+      - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
   bbga:
     build: src

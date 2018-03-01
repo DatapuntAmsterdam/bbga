@@ -89,6 +89,11 @@ class CijfersFilter(FilterSet):
     """
 
     jaar = filters.CharFilter(method='filter_jaar')
+    jaar__gte = filters.NumberFilter(
+        name='jaar', lookup_expr='gte', label='From year')
+
+    jaar__lte = filters.NumberFilter(
+        name='jaar', lookup_expr='lte', label='To year')
 
     class Meta:
         model = models.Cijfers
@@ -100,23 +105,23 @@ class CijfersFilter(FilterSet):
         ]
 
     def filter_jaar(self, queryset, _name, value):
-        """ TODO: Why not select the MAX year rather than loop starting at the
-                  current year?
         """
+        Get the latest, or latest x years
+        """
+        qs = queryset.order_by('-jaar')
+
         if value == 'latest':
             # find value for this year
-            year = date.today().year
-            qs = queryset.filter(jaar=year)
-            # check if we have data or go
-            # up to 3 years back!!
-            for _ in range(1, 4):
-                valid = qs.count()
-                if valid:
-                    break
-                else:
-                    year -= 1
-                    qs = queryset.filter(jaar=year)
-            return qs
+            return qs[:1]
+
+        try:
+            value = int(value)
+        except ValueError:
+            raise serializers.ValidationError(
+                '"jaar" must be "latests" or integer')
+
+        if value < 0:
+            return qs[:abs(value)]
 
         return queryset.filter(jaar=value)
 
@@ -136,9 +141,11 @@ class CijfersViewSet(rest.AtlasViewSet):
 
     https://acc.api.data.amsterdam.nl/bbga/cijfers/?variabele=BEV12_17&gebiedcode15=STAD&jaar=2015
 
+    Jaar kan "latest" zijn. maar kan ook -5 zijn voor de laatste 5 jaar.
+
     """
 
-    queryset = models.Cijfers.objects.all().order_by('id')
+    queryset = models.Cijfers.objects.all().order_by('-jaar')
     serializer_class = serializers.Cijfers
     serializer_detail_class = serializers.CijferDetail
     filter_class = CijfersFilter

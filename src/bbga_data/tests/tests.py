@@ -61,10 +61,10 @@ class BrowseDatasetsTestCase(APITestCase):
                 response.status_code, 200,
                 'Wrong response code for {}'.format(url))
 
-            self.assertEqual(response[
-                                 'Content-Type'],
-                             'application/json',
-                             'Wrong Content-Type for {}'.format(url))
+            self.assertEqual(
+                response['Content-Type'],
+                'application/json',
+                'Wrong Content-Type for {}'.format(url))
 
     def test_latest_filter(self):
         """
@@ -104,6 +104,36 @@ class BrowseDatasetsTestCase(APITestCase):
         old = response.data['results'][0]['jaar']
 
         self.assertEqual(year_now - 3, old)
+
+    def test_latest_njaar_filter(self):
+        nyears = '-3'
+        path = 'bbga/cijfers'
+        params = f'?jaar={nyears}&gebiedcode15=STAD&variabele=BEV0_3'
+        url = '/{}/{}'.format(path, params)
+
+        response = self.client.get(url)
+        print(response.data)
+
+        self.assertEqual(
+            response.status_code, 200,
+            'Wrong response code for {}'.format(url))
+
+        self.assertIn(
+            'count', response.data,
+            msg='No count attribute in {}'.format(url))
+
+        self.assertTrue(
+            response.data['count'] == 3,
+            msg='Wrong result count for {}'.format(url))
+
+        year_now = date.today().year
+
+        latest = response.data['results'][0]['jaar']
+        year_now = date.today().year
+
+        self.assertTrue(
+            latest >= year_now-2,
+            msg="Testdata is too old (latest year={})".format(latest))
 
     def test_data(self):
         """
