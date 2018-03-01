@@ -112,7 +112,6 @@ class BrowseDatasetsTestCase(APITestCase):
         url = '/{}/{}'.format(path, params)
 
         response = self.client.get(url)
-        print(response.data)
 
         self.assertEqual(
             response.status_code, 200,
