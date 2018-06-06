@@ -111,8 +111,7 @@ class CijfersFilter(FilterSet):
         qs = queryset.order_by('-jaar')
 
         if value == 'latest':
-            # find value for this year
-            return qs[:1]
+            value = -1
 
         try:
             value = int(value)
@@ -121,7 +120,9 @@ class CijfersFilter(FilterSet):
                 '"jaar" must be "latests" or integer')
 
         if value < 0:
-            return qs[:abs(value)]
+            years = qs.distinct('jaar').values_list('jaar', flat=True)[:abs(value)]
+
+            return qs.filter(jaar__in=years)
 
         return queryset.filter(jaar=value)
 
