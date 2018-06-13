@@ -7,7 +7,7 @@ import shutil
 
 import requests
 
-METADATA_URL = 'https://api.data.amsterdam.nl/catalogus/api/3/action/package_show?id=b51154d8-2eca-4dd9-932d-63bca9ef0bf2&dtfs=T&mpb=topografie&mpz=9&mpv=52.3719:4.9012'
+METADATA_URL = 'https://api.data.amsterdam.nl/dcatd/datasets/basisbestand-gebieden-amsterdam-bbga'
 
 
 def download():
@@ -16,9 +16,13 @@ def download():
     metadata_res.raise_for_status()
 
     metadata = metadata_res.json()
-    download_csv(metadata['result']['resources'][1]['url'], '/app/data/bbga.csv')
-    download_csv(metadata['result']['resources'][2]['url'], '/app/data/metadata.csv')
-
+    files = {
+        '_:d2': '/app/data/bbga.csv',
+        '_:d3': '/app/data/metadata.csv'
+    }
+    for dist in metadata['dcat:distribution']:
+        if dist['@id'] in files:
+            download_csv(dist['dcat:accessURL'], files[dist['@id']])
 
 def download_csv(csv_location, target):
     print("Downloading CSV from", csv_location)
