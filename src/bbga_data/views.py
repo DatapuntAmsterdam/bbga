@@ -69,7 +69,7 @@ def meta_gebiedcodes(_request):
     return Response(data)
 
 
-class MetaViewSet(rest.AtlasViewSet):
+class MetaViewSet(rest.DatapuntViewSet):
     """
     Metadata
 
@@ -127,7 +127,7 @@ class CijfersFilter(FilterSet):
         return queryset.filter(jaar=value)
 
 
-class CijfersViewSet(rest.AtlasViewSet):
+class CijfersViewSet(rest.DatapuntViewSet):
     """
     Basisbestand Gebieden Amsterdam
 

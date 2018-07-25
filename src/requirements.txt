@@ -21,8 +21,8 @@ djangorestframework-jwt==1.11.0
 drf-extensions==0.3.1
 drf-hal-json==0.9.1
 drf-nested-fields==0.9.4
+drf-amsterdam==0.1.4
 factory-boy==2.9.2
-fake-factory==9999.9.9
 Faker==0.8.6
 first==2.0.1
 graypy==0.2.14
