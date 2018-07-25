@@ -147,7 +147,9 @@ REST_FRAMEWORK = dict(
     DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
     DEFAULT_RENDERER_CLASSES=(
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'datapunt_api.renderers.PaginatedCSVRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
     ),
     DEFAULT_FILTER_BACKENDS=(
         'django_filters.rest_framework.DjangoFilterBackend',),

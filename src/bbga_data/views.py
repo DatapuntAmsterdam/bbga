@@ -69,7 +69,7 @@ def meta_gebiedcodes(_request):
     return Response(data)
 
 
-class MetaViewSet(rest.AtlasViewSet):
+class MetaViewSet(rest.DatapuntViewSet):
     """
     Metadata
 
@@ -90,10 +90,10 @@ class CijfersFilter(FilterSet):
 
     jaar = filters.CharFilter(method='filter_jaar')
     jaar__gte = filters.NumberFilter(
-        name='jaar', lookup_expr='gte', label='From year')
+        field_name='jaar', lookup_expr='gte', label='From year')
 
     jaar__lte = filters.NumberFilter(
-        name='jaar', lookup_expr='lte', label='To year')
+        field_name='jaar', lookup_expr='lte', label='To year')
 
     class Meta:
         model = models.Cijfers
@@ -127,7 +127,7 @@ class CijfersFilter(FilterSet):
         return queryset.filter(jaar=value)
 
 
-class CijfersViewSet(rest.AtlasViewSet):
+class CijfersViewSet(rest.DatapuntViewSet):
     """
     Basisbestand Gebieden Amsterdam
 

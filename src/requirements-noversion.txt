@@ -18,6 +18,7 @@ django-shotgun
 drf-extensions
 drf-hal-json
 drf-nested-fields
+drf-amsterdam
 factory-boy
 fake-factory
 graypy
