@@ -4,11 +4,11 @@ import sys
 from collections import OrderedDict
 
 from django.conf import settings
-from django.db import connection
 from django.core.exceptions import FieldError
+from django.db import connection
 from django.db.utils import DataError
 
-from bbga_data.models import Meta, Cijfers
+from bbga_data.models import Cijfers, Meta
 
 log = logging.getLogger(__name__)
 
@@ -19,6 +19,32 @@ def to_int(value):
     if value == '.':
         return 0
     return value
+
+
+# List of known headers
+META_HEADERS = [
+    "sort",
+    "begrotingsprogramma",
+    "thema",
+    "variabele",
+    "label",
+    "labelkort",
+    "definitie",
+    "bron",
+    "peildatum",
+    "verschijningsfrequentie",
+    "rekeneenheid",
+    "symbool",
+    "groep",
+    "format",
+    "kleurenpalet",
+    "legendacode",
+    "berekende variabelen",
+    "sd minimum bevtotaal",
+    "sd minimum wvoorrbag",
+    "thema kerncijfertabel",
+    "geenkerncijfer",
+]
 
 
 def meta_row_mapping(row):
@@ -47,12 +73,27 @@ def print_row(mapping):
     print('\n\n%30s %40s %10s\n' % ('map', 'rowvalue', 'length'))
     for i, (k, v) in enumerate(mapping.items()):
         mv = v[:30] if isinstance(v, str) else 0
-        l = len(v) if isinstance(v, str) else 0
-        print('%2d %30s %40s %10s' % (i, k, mv, l))
+        length = len(v) if isinstance(v, str) else 0
+        print('%2d %30s %40s %10s' % (i, k, mv, length))
 
 
 def create_row_mapping(headers, row):
-    return {k.lower(): v for k, v in zip(headers, row)}
+    rowmap = {}
+    error_msg = "Header errors: \n"
+    errors = ""
+    for k, v in zip(headers, row):
+        k = k.lower()
+        k = k.replace('_', ' ')
+
+        if k not in META_HEADERS:
+            errors = f"{errors} {k} is an unknown header.\n"
+        rowmap[k] = v
+
+    if errors:
+        log.error('%s %s', error_msg, errors)
+        raise ValueError(errors)
+
+    return rowmap
 
 
 def import_meta_csv(csv_path, _table):

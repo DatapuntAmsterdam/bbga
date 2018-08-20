@@ -1,12 +1,10 @@
 # Python
 import os
-
 from datetime import date
 
 from rest_framework.test import APITestCase
 
-from bbga_data import import_data
-from bbga_data import models
+from bbga_data import import_data, models
 
 
 class BrowseDatasetsTestCase(APITestCase):

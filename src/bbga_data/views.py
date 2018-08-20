@@ -3,14 +3,13 @@
 # Create your views here.
 from datetime import date
 
+from datapunt_api import rest
 from django_filters.rest_framework import filters
 from django_filters.rest_framework.filterset import FilterSet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from datapunt_api import rest
-from . import models
-from . import serializers
+from . import models, serializers
 
 
 @api_view(['GET'])
