@@ -21,6 +21,32 @@ def to_int(value):
     return value
 
 
+# List of known headers
+META_HEADERS = [
+    "sort",
+    "begrotingsprogramma",
+    "thema",
+    "variabele",
+    "label",
+    "labelkort",
+    "definitie",
+    "bron",
+    "peildatum",
+    "verschijningsfrequentie",
+    "rekeneenheid",
+    "symbool",
+    "groep",
+    "format",
+    "kleurenpalet",
+    "legendacode",
+    # "berekende_variabelen",
+    "sd minimum bevtotaal",
+    "sd minimum wvoorrbag",
+    # "Thema_Kerncijfertabel",
+    "geenkerncijfer",
+]
+
+
 def meta_row_mapping(row):
     return OrderedDict([
         ('sort', row['sort']),
@@ -36,7 +62,7 @@ def meta_row_mapping(row):
         ('groep', row['groep']),
         ('format', row['format']),  # 'K'
         ('thema_kleurentabel', row['thema kerncijfertabel']),
-        # ('kleurenpalet', to_int(row['kleurenpalet'])),
+        ('kleurenpalet', to_int(row['kleurenpalet'])),
         ('legendacode', to_int(row['legendacode'])),
         ('minimum_aantal_inwoners', to_int(row['sd minimum bevtotaal'])),
         ('minimum_aantal_woningen', to_int(row['sd minimum wvoorrbag']))
@@ -52,7 +78,21 @@ def print_row(mapping):
 
 
 def create_row_mapping(headers, row):
-    return {k.lower(): v for k, v in zip(headers, row)}
+    rowmap = {}
+    errors = "Header errors: \n"
+    for k, v in zip(headers, row):
+        k = k.lower()
+        k = k.replace('_', ' ')
+
+        if k not in META_HEADERS:
+            errors = f"{errors} {k} is an unknown header.\n"
+        rowmap[k] = v
+
+    if errors:
+        log.error(errors)
+        raise ValueError(errors)
+
+    return rowmap
 
 
 def import_meta_csv(csv_path, _table):
