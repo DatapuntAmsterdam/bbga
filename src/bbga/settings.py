@@ -10,9 +10,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
-from bbga.settings_databases import get_docker_host
-from bbga.settings_databases import get_database_key
-from bbga.settings_databases import LocationKey
+from bbga.settings_databases import (LocationKey, get_database_key,
+                                     get_docker_host)
 
 OVERRIDE_HOST_ENV_VAR = 'DATABASE_HOST_OVERRIDE'
 OVERRIDE_PORT_ENV_VAR = 'DATABASE_PORT_OVERRIDE'

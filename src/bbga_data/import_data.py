@@ -4,11 +4,11 @@ import sys
 from collections import OrderedDict
 
 from django.conf import settings
-from django.db import connection
 from django.core.exceptions import FieldError
+from django.db import connection
 from django.db.utils import DataError
 
-from bbga_data.models import Meta, Cijfers
+from bbga_data.models import Cijfers, Meta
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def meta_row_mapping(row):
         ('groep', row['groep']),
         ('format', row['format']),  # 'K'
         ('thema_kleurentabel', row['thema kerncijfertabel']),
-        ('kleurenpalet', to_int(row['kleurenpalet'])),
+        # ('kleurenpalet', to_int(row['kleurenpalet'])),
         ('legendacode', to_int(row['legendacode'])),
         ('minimum_aantal_inwoners', to_int(row['sd minimum bevtotaal'])),
         ('minimum_aantal_woningen', to_int(row['sd minimum wvoorrbag']))
@@ -47,8 +47,8 @@ def print_row(mapping):
     print('\n\n%30s %40s %10s\n' % ('map', 'rowvalue', 'length'))
     for i, (k, v) in enumerate(mapping.items()):
         mv = v[:30] if isinstance(v, str) else 0
-        l = len(v) if isinstance(v, str) else 0
-        print('%2d %30s %40s %10s' % (i, k, mv, l))
+        length = len(v) if isinstance(v, str) else 0
+        print('%2d %30s %40s %10s' % (i, k, mv, length))
 
 
 def create_row_mapping(headers, row):
