@@ -39,10 +39,10 @@ META_HEADERS = [
     "format",
     "kleurenpalet",
     "legendacode",
-    # "berekende_variabelen",
+    "berekende variabelen",
     "sd minimum bevtotaal",
     "sd minimum wvoorrbag",
-    # "Thema_Kerncijfertabel",
+    "thema kerncijfertabel",
     "geenkerncijfer",
 ]
 
@@ -79,7 +79,8 @@ def print_row(mapping):
 
 def create_row_mapping(headers, row):
     rowmap = {}
-    errors = "Header errors: \n"
+    error_msg = "Header errors: \n"
+    errors = ""
     for k, v in zip(headers, row):
         k = k.lower()
         k = k.replace('_', ' ')
@@ -89,7 +90,7 @@ def create_row_mapping(headers, row):
         rowmap[k] = v
 
     if errors:
-        log.error(errors)
+        log.error('%s %s', error_msg, errors)
         raise ValueError(errors)
 
     return rowmap
