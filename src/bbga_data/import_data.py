@@ -62,7 +62,7 @@ def meta_row_mapping(row):
         ('groep', row['groep']),
         ('format', row['format']),  # 'K'
         ('thema_kleurentabel', row['thema kerncijfertabel']),
-        ('kleurenpalet', to_int(row['kleurenpalet'])),
+        # ('kleurenpalet', to_int(row['kleurenpalet'])),
         ('legendacode', to_int(row['legendacode'])),
         ('minimum_aantal_inwoners', to_int(row['sd minimum bevtotaal'])),
         ('minimum_aantal_woningen', to_int(row['sd minimum wvoorrbag']))
