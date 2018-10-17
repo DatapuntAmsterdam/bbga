@@ -6,6 +6,7 @@ from datetime import date
 from datapunt_api import rest
 from django_filters.rest_framework import filters
 from django_filters.rest_framework.filterset import FilterSet
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -78,6 +79,7 @@ class MetaViewSet(rest.DatapuntViewSet):
     queryset = models.Meta.objects.all().order_by('id')
     serializer_class = serializers.Meta
     serializer_detail_class = serializers.MetaDetail
+    filter_backends = (DjangoFilterBackend,)
 
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
@@ -149,6 +151,7 @@ class CijfersViewSet(rest.DatapuntViewSet):
     serializer_class = serializers.Cijfers
     serializer_detail_class = serializers.CijferDetail
     filter_class = CijfersFilter
+    filter_backends = (DjangoFilterBackend,)
 
     ordering_fields = ('jaar', 'buurt', 'variabele')
     ordering = ('-jaar', 'buurt', 'variabele')
