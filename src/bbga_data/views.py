@@ -84,12 +84,25 @@ class MetaViewSet(rest.DatapuntViewSet):
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
 
+GEBIED_CODES = (
+    models.Cijfers.objects
+    .values_list('gebiedcode15')
+    .distinct()
+    .extra(order_by=['gebiedcode15'])
+)
+
+
 class CijfersFilter(FilterSet):
     """
     Filter nummeraanduidingkjes
     """
 
-    jaar = filters.CharFilter(method='filter_jaar')
+    jaar = filters.CharFilter(method='filter_jaar', )
+
+    gebiedcode = filters.ChoiceFilter(
+        label='gebiedscode',
+        method='filter_gebied', choices=[(g[0], g[0]) for g in GEBIED_CODES])
+
     jaar__gte = filters.NumberFilter(
         field_name='jaar', lookup_expr='gte', label='From year')
 
@@ -100,10 +113,16 @@ class CijfersFilter(FilterSet):
         model = models.Cijfers
         fields = [
             'gebiedcode15',
+            'gebiedcode',
             'variabele',
             # must be last!!
             'jaar',
         ]
+
+    def filter_gebied(self, queryset, _name, value):
+        """filter on gebied code.
+        """
+        return queryset.filter(gebiedcode15=value)
 
     def filter_jaar(self, queryset, _name, value):
         """
