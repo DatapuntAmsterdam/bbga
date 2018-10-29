@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DIVA_DIR = '/app/data'
 
-SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
+SECRET_KEY = os.getenv("SECRET_KEY", "insecure")
 
-DEBUG = SECRET_KEY == 'default-secret'
+DEBUG = SECRET_KEY == 'insecure'
 
 NO_INTEGRATION_TESTS = True
 

@@ -100,9 +100,20 @@ GEBIED_CODES = (
     .extra(order_by=['gebiedcode15'])
 )
 
+VARIABELEN = (
+    models.Meta.objects
+    .values_list('variabele')
+    .distinct().extra(
+        order_by=['variabele']
+    )
+)
+
 
 if not is_database_synchronized('default'):
+    """Set default values on empty if we are migrating.
+    """
     GEBIED_CODES = [(0, 0)]
+    VARIABELEN = [(0, 0)]
 
 
 class CijfersFilter(FilterSet):
@@ -122,6 +133,11 @@ class CijfersFilter(FilterSet):
     jaar__lte = filters.NumberFilter(
         field_name='jaar', lookup_expr='lte', label='To year')
 
+    variabele = filters.ChoiceFilter(
+        label='variabele',
+        method='filter_variabele',
+        choices=[(v[0], v[0]) for v in VARIABELEN])
+
     class Meta:
         model = models.Cijfers
         fields = [
@@ -136,6 +152,11 @@ class CijfersFilter(FilterSet):
         """filter on gebied code.
         """
         return queryset.filter(gebiedcode15=value)
+
+    def filter_variabele(self, queryset, _name, value):
+        """filter on variabele.
+        """
+        return queryset.filter(variabele=value)
 
     def filter_jaar(self, queryset, _name, value):
         """
