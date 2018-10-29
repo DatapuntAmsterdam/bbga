@@ -1,5 +1,6 @@
 # from django.shortcuts import render
-
+from django.db.migrations.executor import MigrationExecutor
+from django.db import connections, DEFAULT_DB_ALIAS
 # Create your views here.
 from datetime import date
 
@@ -84,12 +85,24 @@ class MetaViewSet(rest.DatapuntViewSet):
     filter_fields = ('id', 'thema', 'variabele', 'groep', 'bron')
 
 
+def is_database_synchronized(database):
+    connection = connections[database]
+    connection.prepare_database()
+    executor = MigrationExecutor(connection)
+    targets = executor.loader.graph.leaf_nodes()
+    return False if executor.migration_plan(targets) else True
+
+
 GEBIED_CODES = (
     models.Cijfers.objects
     .values_list('gebiedcode15')
     .distinct()
     .extra(order_by=['gebiedcode15'])
 )
+
+
+if not is_database_synchronized('default'):
+    GEBIED_CODES = [(0, 0)]
 
 
 class CijfersFilter(FilterSet):
