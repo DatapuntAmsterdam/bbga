@@ -106,11 +106,14 @@ GEBIED_CODES = []
 VARIABELEN = []
 
 
-def get_choices(var, qs):
+def get_choices(var, qs, test_default=[]):
     if var:
         return var
     if is_database_synchronized('default'):
         var = [(g[0], g[0]) for g in qs]
+
+    if not var:
+        return test_default
     return var
 
 
@@ -122,7 +125,11 @@ class CijfersFilter(FilterSet):
     gebiedcode = filters.ChoiceFilter(
         label='gebiedscode',
         method='filter_gebied',
-        choices=get_choices(GEBIED_CODES, GEBIED_CODES_QS))
+        choices=get_choices(
+            GEBIED_CODES, GEBIED_CODES_QS,
+            test_default=[('STAD', 'STAD')]
+        )
+    )
 
     jaar__gte = filters.NumberFilter(
         field_name='jaar', lookup_expr='gte', label='From year')
@@ -133,7 +140,11 @@ class CijfersFilter(FilterSet):
     variabele = filters.ChoiceFilter(
         label='variabele',
         method='filter_variabele',
-        choices=get_choices(VARIABELEN, VARIABELEN_QS))
+        choices=get_choices(
+            VARIABELEN, VARIABELEN_QS,
+            test_default=[('BEV0_3', 'BEV0_3')]
+        )
+    )
 
     class Meta:
         model = models.Cijfers

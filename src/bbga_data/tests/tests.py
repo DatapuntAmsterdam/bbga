@@ -4,8 +4,7 @@ from datetime import date
 
 from rest_framework.test import APITestCase
 
-# WE NEED VIEWS here to intialize choice fields.
-from bbga_data import import_data, models, views # noqa
+from bbga_data import import_data, models
 
 
 class BrowseDatasetsTestCase(APITestCase):
@@ -74,6 +73,7 @@ class BrowseDatasetsTestCase(APITestCase):
         url = '/{}/{}'.format(path, params)
 
         response = self.client.get(url)
+
         self.assertEqual(
             response.status_code, 200,
             'Wrong response code for {} {}'.format(url, response))
