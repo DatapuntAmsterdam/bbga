@@ -4,7 +4,8 @@ from datetime import date
 
 from rest_framework.test import APITestCase
 
-from bbga_data import import_data, models
+# WE NEED VIEWS here to intialize choice fields.
+from bbga_data import import_data, models, views # noqa
 
 
 class BrowseDatasetsTestCase(APITestCase):
@@ -73,10 +74,9 @@ class BrowseDatasetsTestCase(APITestCase):
         url = '/{}/{}'.format(path, params)
 
         response = self.client.get(url)
-
         self.assertEqual(
             response.status_code, 200,
-            'Wrong response code for {}'.format(url))
+            'Wrong response code for {} {}'.format(url, response))
 
         self.assertIn('count', response.data,
                       msg='No count attribute in {}'.format(url))

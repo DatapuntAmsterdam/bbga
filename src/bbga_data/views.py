@@ -1,8 +1,10 @@
+"""BBGA views."""
+
 # from django.shortcuts import render
+
 from django.db.migrations.executor import MigrationExecutor
-from django.db import connections, DEFAULT_DB_ALIAS
+from django.db import connections
 # Create your views here.
-from datetime import date
 
 from datapunt_api import rest
 from django_filters.rest_framework import filters
@@ -16,10 +18,7 @@ from . import models, serializers
 
 @api_view(['GET'])
 def meta_groepen(_request):
-    """
-    Lijst van groepen
-    """
-
+    """Lijst van groepen."""
     queryset = models.Meta.objects.values('groep').distinct().extra(
         order_by=['groep'])
 
@@ -31,9 +30,7 @@ def meta_groepen(_request):
 
 @api_view(['GET'])
 def meta_themas(_request):
-    """
-    Lijst met gebruikte thema's
-    """
+    """Lijst met gebruikte thema's."""
     queryset = models.Meta.objects.values('thema').distinct().extra(
         order_by=['thema'])
     data = {
@@ -44,9 +41,7 @@ def meta_themas(_request):
 
 @api_view(['GET'])
 def meta_variabelen(_request):
-    """
-    Lijst met gebruikte variabelen
-    """
+    """Lijst met gebruikte variabelen."""
     queryset = models.Meta.objects.values('variabele').distinct().extra(
         order_by=['variabele'])
 
@@ -58,9 +53,7 @@ def meta_variabelen(_request):
 
 @api_view(['GET'])
 def meta_gebiedcodes(_request):
-    """
-    Lijst met gebruikte gebiedscodes
-    """
+    """Lijst met gebruikte gebiedscodes."""
     queryset = models.Cijfers.objects.values('gebiedcode15').distinct().extra(
         order_by=['gebiedcode15'])
 
@@ -71,10 +64,9 @@ def meta_gebiedcodes(_request):
 
 
 class MetaViewSet(rest.DatapuntViewSet):
-    """
-    Metadata
+    """Metadata.
 
-    Lijst met alle Meta-data gebruikt in BBGA
+    Lijst met alle Meta-data gebruikt in BBGA.
     """
 
     queryset = models.Meta.objects.all().order_by('id')
@@ -87,20 +79,20 @@ class MetaViewSet(rest.DatapuntViewSet):
 
 def is_database_synchronized(database):
     connection = connections[database]
-    connection.prepare_database()
+    connection.connect()
     executor = MigrationExecutor(connection)
     targets = executor.loader.graph.leaf_nodes()
     return False if executor.migration_plan(targets) else True
 
 
-GEBIED_CODES = (
+GEBIED_CODES_QS = (
     models.Cijfers.objects
     .values_list('gebiedcode15')
     .distinct()
     .extra(order_by=['gebiedcode15'])
 )
 
-VARIABELEN = (
+VARIABELEN_QS = (
     models.Meta.objects
     .values_list('variabele')
     .distinct().extra(
@@ -108,24 +100,29 @@ VARIABELEN = (
     )
 )
 
+GEBIED_CODES = []
 
-if not is_database_synchronized('default'):
-    """Set default values on empty if we are migrating.
-    """
-    GEBIED_CODES = [(0, 0)]
-    VARIABELEN = [(0, 0)]
+# default added for test
+VARIABELEN = []
+
+
+def get_choices(var, qs):
+    if var:
+        return var
+    if is_database_synchronized('default'):
+        var = [(g[0], g[0]) for g in qs]
+    return var
 
 
 class CijfersFilter(FilterSet):
-    """
-    Filter nummeraanduidingkjes
-    """
+    """Filter nummeraanduidingkjes."""
 
     jaar = filters.CharFilter(method='filter_jaar', )
 
     gebiedcode = filters.ChoiceFilter(
         label='gebiedscode',
-        method='filter_gebied', choices=[(g[0], g[0]) for g in GEBIED_CODES])
+        method='filter_gebied',
+        choices=get_choices(GEBIED_CODES, GEBIED_CODES_QS))
 
     jaar__gte = filters.NumberFilter(
         field_name='jaar', lookup_expr='gte', label='From year')
@@ -136,7 +133,7 @@ class CijfersFilter(FilterSet):
     variabele = filters.ChoiceFilter(
         label='variabele',
         method='filter_variabele',
-        choices=[(v[0], v[0]) for v in VARIABELEN])
+        choices=get_choices(VARIABELEN, VARIABELEN_QS))
 
     class Meta:
         model = models.Cijfers
@@ -149,19 +146,15 @@ class CijfersFilter(FilterSet):
         ]
 
     def filter_gebied(self, queryset, _name, value):
-        """filter on gebied code.
-        """
+        """Filter on gebied code."""
         return queryset.filter(gebiedcode15=value)
 
     def filter_variabele(self, queryset, _name, value):
-        """filter on variabele.
-        """
+        """Filter on variabele."""
         return queryset.filter(variabele=value)
 
     def filter_jaar(self, queryset, _name, value):
-        """
-        Get the latest, or latest x years
-        """
+        """Get the latest, or latest x years."""
         qs = queryset.order_by('-jaar')
 
         if value == 'latest':
@@ -174,7 +167,10 @@ class CijfersFilter(FilterSet):
                 '"jaar" must be "latests" or integer')
 
         if value < 0:
-            years = qs.distinct('jaar').values_list('jaar', flat=True)[:abs(value)]
+            years = (
+                qs.distinct('jaar')
+                .values_list('jaar', flat=True)[:abs(value)]
+            )
 
             return qs.filter(jaar__in=years)
 
@@ -182,8 +178,7 @@ class CijfersFilter(FilterSet):
 
 
 class CijfersViewSet(rest.DatapuntViewSet):
-    """
-    Basisbestand Gebieden Amsterdam
+    """Basisbestand Gebieden Amsterdam.
 
     https://www.ois.amsterdam.nl/online-producten/basisbestand-gebieden-amsterdam
 
