@@ -1,12 +1,10 @@
 # Python
 import os
-
 from datetime import date
 
 from rest_framework.test import APITestCase
 
-from bbga_data import import_data
-from bbga_data import models
+from bbga_data import import_data, models
 
 
 class BrowseDatasetsTestCase(APITestCase):
@@ -78,7 +76,7 @@ class BrowseDatasetsTestCase(APITestCase):
 
         self.assertEqual(
             response.status_code, 200,
-            'Wrong response code for {}'.format(url))
+            'Wrong response code for {} {}'.format(url, response))
 
         self.assertIn('count', response.data,
                       msg='No count attribute in {}'.format(url))

@@ -16,14 +16,13 @@ Including another URLconf
 
 import collections
 
-from django.conf.urls import url, include
-from rest_framework import routers, views, reverse, renderers, schemas, response
+from django.conf.urls import include, url
+from rest_framework import (renderers, response, reverse, routers, schemas,
+                            views)
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework_swagger.renderers import OpenAPIRenderer
-from rest_framework_swagger.renderers import SwaggerUIRenderer
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from bbga_data import views as bbga_views
-
 
 # stack overflow hack
 # http://stackoverflow.com/questions/18817988/using-django-rest-frameworks-browsable-api-with-apiviews

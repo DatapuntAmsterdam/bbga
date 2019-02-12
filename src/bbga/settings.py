@@ -10,9 +10,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
-from bbga.settings_databases import get_docker_host
-from bbga.settings_databases import get_database_key
-from bbga.settings_databases import LocationKey
+from bbga.settings_databases import (LocationKey, get_database_key,
+                                     get_docker_host)
 
 OVERRIDE_HOST_ENV_VAR = 'DATABASE_HOST_OVERRIDE'
 OVERRIDE_PORT_ENV_VAR = 'DATABASE_PORT_OVERRIDE'
@@ -24,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DIVA_DIR = '/app/data'
 
-SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
+SECRET_KEY = os.getenv("SECRET_KEY", "insecure")
 
-DEBUG = SECRET_KEY == 'default-secret'
+DEBUG = SECRET_KEY == 'insecure'
 
 NO_INTEGRATION_TESTS = True
 
@@ -138,7 +137,7 @@ HEALTH_MODEL = 'bbga_data.Cijfers'
 
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
-    MAX_PAGINATE_BY=100,
+    MAX_PAGINATE_BY=8000,
 
     UNAUTHENTICATED_USER=None,
     UNAUTHENTICATED_TOKEN=None,
@@ -147,7 +146,9 @@ REST_FRAMEWORK = dict(
     DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
     DEFAULT_RENDERER_CLASSES=(
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'datapunt_api.renderers.PaginatedCSVRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
     ),
     DEFAULT_FILTER_BACKENDS=(
         'django_filters.rest_framework.DjangoFilterBackend',),

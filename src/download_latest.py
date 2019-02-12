@@ -7,7 +7,7 @@ import shutil
 
 import requests
 
-METADATA_URL = 'https://api.data.amsterdam.nl/dcatd/datasets/basisbestand-gebieden-amsterdam-bbga'
+METADATA_URL = 'https://api.data.amsterdam.nl/dcatd/datasets/G5JpqNbhweXZSw'
 
 
 def download():
