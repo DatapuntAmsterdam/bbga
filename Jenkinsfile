@@ -18,6 +18,13 @@ def tryStep(String message, Closure block, Closure tearDown = null) {
 
 
 node {
+    environment {
+      HTTP_PROXY    = "${env.JENKINS_HTTP_PROXY_STRING}"
+      HTTPS_PROXY   = "${env.JENKINS_HTTP_PROXY_STRING}"
+      NO_PROXY      = "${env.JENKINS_NO_PROXY_STRING}"
+      PROXY_ENABLED = 'TRUE'
+    }
+
     stage("Checkout") {
         checkout scm
     }
@@ -34,7 +41,7 @@ node {
     stage("Build image") {
         tryStep "build", {
             docker.withRegistry('https://repo.data.amsterdam.nl','docker-registry') {
-                def image = docker.build("datapunt/bbga:${env.BUILD_NUMBER}","src")
+                def image = docker.build("datapunt/bbga:${env.BUILD_NUMBER}", "--build-arg http_proxy=${env.HTTP_PROXY} --build-arg https_proxy=${env.HTTP_PROXY} src")
                 image.push()
             }
         }
