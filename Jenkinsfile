@@ -18,13 +18,6 @@ def tryStep(String message, Closure block, Closure tearDown = null) {
 
 
 node {
-    environment {
-      HTTP_PROXY    = "${JENKINS_HTTP_PROXY_STRING}"
-      HTTPS_PROXY   = "${JENKINS_HTTP_PROXY_STRING}"
-      NO_PROXY      = "${JENKINS_NO_PROXY_STRING}"
-      PROXY_ENABLED = 'TRUE'
-    }
-
     stage("Checkout") {
         checkout scm
     }
