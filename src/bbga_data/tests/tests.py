@@ -132,6 +132,34 @@ class BrowseDatasetsTestCase(APITestCase):
             latest >= year_now-2,
             msg="Testdata is too old (latest year={})".format(latest))
 
+    def test_combined_variable_filter(self):
+        path = 'bbga/cijfers'
+        params = f'?jaar=-1&variabele=BEV0_3,BEV0_17'
+        url = '/{}/{}'.format(path, params)
+
+        response = self.client.get(url)
+
+        self.assertEqual(
+            response.status_code, 200,
+            'Wrong response code for {}, {}'.format(url, response.data))
+
+        self.assertIn(
+            'count', response.data,
+            msg='No count attribute in {}'.format(url))
+
+        self.assertEqual(
+            response.data['count'], 2,
+            'Wrong result count for {} {}'.format(
+                    url, response.data['count']))
+
+        # invalid request
+        params = f'?jaar=-1&variabele=IdoNotexist'
+        url = '/{}/{}'.format(path, params)
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code, 400,
+            'Wrong response code for {}, {}'.format(url, response.data))
+
     def test_data(self):
         """
         Health is only ok (200) with more the 1.000.000 records.

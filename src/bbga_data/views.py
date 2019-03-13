@@ -1,9 +1,11 @@
 """BBGA views."""
 
+import logging
 # from django.shortcuts import render
 
 from django.db.migrations.executor import MigrationExecutor
 from django.db import connections
+from django.conf import settings
 # Create your views here.
 
 from datapunt_api import rest
@@ -12,8 +14,11 @@ from django_filters.rest_framework.filterset import FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import serializers as drf_serializers
 
 from . import models, serializers
+
+log = logging.getLogger(__name__)
 
 
 @api_view(['GET'])
@@ -107,9 +112,11 @@ VARIABELEN = []
 
 
 def get_choices(var, qs, test_default=[]):
+    """runs onstartup"""
     if var:
         return var
-    if is_database_synchronized('default'):
+
+    if not settings.TESTING and is_database_synchronized('default'):
         var = [(g[0], g[0]) for g in qs]
 
     if not var:
@@ -137,13 +144,9 @@ class CijfersFilter(FilterSet):
     jaar__lte = filters.NumberFilter(
         field_name='jaar', lookup_expr='lte', label='To year')
 
-    variabele = filters.ChoiceFilter(
+    variabele = filters.CharFilter(
         label='variabele',
-        method='filter_variabele',
-        choices=get_choices(
-            VARIABELEN, VARIABELEN_QS,
-            test_default=[('BEV0_3', 'BEV0_3')]
-        )
+        method='filter_variabele'
     )
 
     class Meta:
@@ -158,11 +161,30 @@ class CijfersFilter(FilterSet):
 
     def filter_gebied(self, queryset, _name, value):
         """Filter on gebied code."""
-        return queryset.filter(gebiedcode15=value)
+        values = value.split(',')
+        return queryset.filter(gebiedcode15__in=values)
 
     def filter_variabele(self, queryset, _name, value):
         """Filter on variabele."""
-        return queryset.filter(variabele=value)
+
+        values = value.split(',')
+
+        choices = get_choices(
+            VARIABELEN, VARIABELEN_QS,
+            test_default=[
+                ('BEV0_3', 'BEV0_3'),
+                ('BEV0_17', 'BEV0_17'),
+            ]
+        )
+
+        valid_vars = [v[0] for v in choices]
+
+        for v in values:
+            if v not in valid_vars:
+                raise drf_serializers.ValidationError(
+                    f"Invalid varable {v} used. valid are {valid_vars}")
+
+        return queryset.filter(variabele__in=values)
 
     def filter_jaar(self, queryset, _name, value):
         """Get the latest, or latest x years."""
@@ -174,7 +196,7 @@ class CijfersFilter(FilterSet):
         try:
             value = int(value)
         except ValueError:
-            raise serializers.ValidationError(
+            raise drf_serializers.ValidationError(
                 '"jaar" must be "latests" or integer')
 
         if value < 0:

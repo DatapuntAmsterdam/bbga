@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sys
 
 from bbga.settings_databases import (LocationKey, get_database_key,
                                      get_docker_host)
@@ -28,6 +29,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "insecure")
 DEBUG = SECRET_KEY == 'insecure'
 
 NO_INTEGRATION_TESTS = True
+
+TESTING = sys.argv[1:2] == ['test']
 
 ALLOWED_HOSTS = ['*']
 
