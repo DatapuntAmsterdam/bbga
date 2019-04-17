@@ -44,6 +44,12 @@ META_HEADERS = [
     "sd minimum wvoorrbag",
     "thema kerncijfertabel",
     "geenkerncijfer",
+    "tussenkopje kerncijfertabel",
+    "topic area",
+    "label 1",
+    "definition",
+    "reference date",
+    "frequency",
 ]
 
 
