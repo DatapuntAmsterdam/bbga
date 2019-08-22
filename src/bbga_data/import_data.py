@@ -44,6 +44,12 @@ META_HEADERS = [
     "sd minimum wvoorrbag",
     "thema kerncijfertabel",
     "geenkerncijfer",
+    "tussenkopje kerncijfertabel",
+    "topic area",
+    "label 1",
+    "definition",
+    "reference date",
+    "frequency",
 ]
 
 
@@ -51,18 +57,25 @@ def meta_row_mapping(row):
     return OrderedDict([
         ('sort', row['sort']),
         ('thema', row['thema']),
+        ('topic', row['topic area']),
         ('variabele', row['variabele']),
         ('label', row['label']),
+        ('label_kort', row['labelkort']),
+        ('label_1', row['label 1']),
+        ('tussenkop_kerncijfertabel', row['tussenkopje kerncijfertabel']),
         ('definitie', row['definitie']),
+        ('definition', row['definition']),
         ('bron', row['bron']),
         ('peildatum', row['peildatum']),
+        ('reference_date', row['reference date']),
         ('verschijningsfrequentie', row['verschijningsfrequentie']),
+        ('frequency', row['frequency']),
         ('eenheid', to_int(row['rekeneenheid'])),
         ('symbool', row['symbool']),
         ('groep', row['groep']),
         ('format', row['format']),  # 'K'
         ('thema_kleurentabel', row['thema kerncijfertabel']),
-        # ('kleurenpalet', to_int(row['kleurenpalet'])),
+        ('kleurenpalet', to_int(row['kleurenpalet'])),
         ('legendacode', to_int(row['legendacode'])),
         ('minimum_aantal_inwoners', to_int(row['sd minimum bevtotaal'])),
         ('minimum_aantal_woningen', to_int(row['sd minimum wvoorrbag']))

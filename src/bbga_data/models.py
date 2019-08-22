@@ -11,10 +11,19 @@ class Meta(models.Model):
     thema = models.CharField(max_length=30)
     variabele = models.CharField(max_length=50, unique=True)
     label = models.CharField(max_length=65)
+    label_kort = models.CharField(max_length=50, null=True)
     definitie = models.TextField()
+    tussenkop_kerncijfertabel =  models.CharField(max_length=65, null=True)
     bron = models.CharField(max_length=50)
     peildatum = models.CharField(max_length=50)
     verschijningsfrequentie = models.CharField(max_length=50)
+
+    # EN
+    topic = models.CharField(max_length=30, null=True)
+    label_1 = models.CharField(max_length=100, null=True)
+    definition = models.TextField()
+    reference_date = models.CharField(max_length=50, null=True)
+    frequency = models.CharField(max_length=100, null=True)
 
     eenheid = models.IntegerField(null=True)
     groep = models.CharField(max_length=50, null=True)
