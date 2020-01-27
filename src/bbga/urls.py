@@ -17,15 +17,19 @@ Including another URLconf
 import collections
 
 from django.conf.urls import include, url
-from rest_framework import (renderers, response, reverse, routers, schemas,
-                            views)
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
-
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import (
+    permissions,
+    response,
+    reverse,
+    routers,
+    views)
 from bbga_data import views as bbga_views
 
 # stack overflow hack
 # http://stackoverflow.com/questions/18817988/using-django-rest-frameworks-browsable-api-with-apiviews
+
 
 class HybridRouter(routers.DefaultRouter):
     def __init__(self, *args, **kwargs):
@@ -133,20 +137,25 @@ bbga.register(
 )
 
 
-@api_view()
-@renderer_classes(
-    [SwaggerUIRenderer, OpenAPIRenderer, renderers.CoreJSONRenderer])
-def schema_view(request):
-    generator = schemas.SchemaGenerator(
-        title='BBGA API',
-
-    )
-    return response.Response(generator.get_schema(request=request))
-
+schema_view = get_schema_view(
+    openapi.Info(
+        title="BBGA API",
+        default_version='v1',
+        description="BBGA API",
+        terms_of_service="https://data.amsterdam.nl/",
+        contact=openapi.Contact(email="datapunt@amsterdam.nl"),
+        license=openapi.License(name="CC0 1.0 Universal"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 # root url
 urlpatterns = [
-    url('^bbga/docs/api-docs/$', schema_view),
+    url(r'^bbga/docs/api-docs(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=None)),
+    url('^bbga/docs/api-docs/$',
+        schema_view.with_ui('swagger', cache_timeout=None)),
     url(r'^bbga/', include(bbga.urls)),
     url(r'^status/', include("health.urls"))
 ]

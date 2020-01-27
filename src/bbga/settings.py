@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django.contrib.postgres',
     'django_extensions',
+    'drf_yasg',
     'datapunt_api',
     'bbga',
     'bbga_data',
