@@ -125,11 +125,11 @@ bbga.add_api_view(
 )
 
 bbga.register(
-    r'meta', bbga_views.MetaViewSet, base_name='bbga/meta',
+    r'meta', bbga_views.MetaViewSet, base_name='meta',
 )
 
 bbga.register(
-    r'cijfers', bbga_views.CijfersViewSet, base_name='bbga/cijfers'
+    r'cijfers', bbga_views.CijfersViewSet, base_name='cijfers'
 )
 
 
