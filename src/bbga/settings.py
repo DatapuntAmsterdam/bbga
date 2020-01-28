@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'bbga_data',
     'corsheaders',
     'rest_framework',
-    'rest_framework_swagger',
     'django_filters',
     'health',
 ]
@@ -160,44 +159,8 @@ REST_FRAMEWORK = dict(
 )
 
 # SWAGGER
-
-swag_path = 'acc.api.data.amsterdam.nl/bbga/docs'
-
-if DEBUG:
-    swag_path = '127.0.0.1:8000/bbga/docs'
-
 SWAGGER_SETTINGS = {
-    'exclude_namespaces': [],
-    'api_version': '0.1',
-    'api_path': '/',
-
-    'enabled_methods': [
-        'get',
-    ],
-
-    'api_key': '',
     'USE_SESSION_AUTH': False,
-    'VALIDATOR_URL': None,
-
-    'is_authenticated': False,
-    'is_superuser': False,
-
-    'permission_denied_handler': None,
-    'resource_access_handler': None,
-
-    'protocol': 'https' if not DEBUG else '',
-    'base_path': swag_path,
-
-    'info': {
-        'contact': 'atlas.basisinformatie@amsterdam.nl',
-        'description': 'This is the BBGA API server.',
-        'license': 'license Not known yet.',
-        'licenseUrl': '://www.amsterdam.nl/stelselpedia/',
-        'termsOfServiceUrl': 'https://data.amsterdam.nl/terms/',
-        'title': 'BBGA',
-    },
-
-    'doc_expansion': 'list',
 }
 
 LOGSTASH_HOST = os.getenv('LOGSTASH_HOST', '127.0.0.1')
