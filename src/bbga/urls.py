@@ -144,7 +144,7 @@ schema_view = get_schema_view(
         description="BBGA API",
         terms_of_service="https://data.amsterdam.nl/",
         contact=openapi.Contact(email="datapunt@amsterdam.nl"),
-        license=openapi.License(name="CC0 1.0 Universal"),
+        license=openapi.License(name="license Not known yet."),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
