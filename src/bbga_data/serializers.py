@@ -9,7 +9,7 @@ class BBGAMixin(rest.DataSetSerializerMixin):
 
 
 # list serializers
-class Meta(serializers.ModelSerializer):
+class MetaSerialiser(serializers.ModelSerializer):
     _display = rest.DisplayField()
 
     class Meta:
@@ -18,7 +18,6 @@ class Meta(serializers.ModelSerializer):
 
 
 class MetaDetail(BBGAMixin, rest.HALSerializer):
-    type = serializers.CharField(source='get_type_display')
     _display = rest.DisplayField()
 
     class Meta:
@@ -39,11 +38,11 @@ class Cijfers(serializers.ModelSerializer):
 
 
 class CijferDetail(BBGAMixin, rest.HALSerializer):
-    type = serializers.CharField(source='get_type_display')
     _display = rest.DisplayField()
 
     class Meta:
         model = models.Cijfers
+        fields = '__all__'
 
 
 class VariabelenSerializer(serializers.Serializer):
