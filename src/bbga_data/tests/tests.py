@@ -1,5 +1,6 @@
 # Python
 import os
+import json
 from datetime import date
 
 from rest_framework.test import APITestCase
@@ -50,6 +51,24 @@ class BrowseDatasetsTestCase(APITestCase):
             self.assertNotEqual(
                 response.data['count'], 0,
                 'Wrong result count for {}'.format(url))
+
+    def test_details(self):
+        for url in self.datasets:
+            list_response = self.client.get('/{}/'.format(url))
+
+            first_result = json.loads(
+                list_response.content)['results'][0]['id']
+
+            response = self.client.get('/{}/{}/'.format(url, first_result))
+
+            self.assertEqual(
+                response.status_code, 200,
+                'Wrong response code for {}/{}'.format(url, first_result))
+
+            self.assertEqual(
+                response['Content-Type'],
+                'application/json',
+                'Wrong Content-Type for {}/{}'.format(url, first_result))
 
     def test_extra(self):
         for url in self.extra_sets:

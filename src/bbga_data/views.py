@@ -75,7 +75,7 @@ class MetaViewSet(rest.DatapuntViewSet):
     """
 
     queryset = models.Meta.objects.all().order_by('id')
-    serializer_class = serializers.Meta
+    serializer_class = serializers.MetaSerialiser
     serializer_detail_class = serializers.MetaDetail
     filter_backends = (DjangoFilterBackend,)
 
