@@ -9,7 +9,7 @@ services:
       - ./backups:/tmp/backups
 
   importer:
-    image: repo.data.amsterdam.nl/datapunt/bbga:${ENVIRONMENT}
+    image: ${DOCKER_REGISTRY_HOST}/datapunt/bbga:${ENVIRONMENT}
     links:
       - database:database
     environment:
