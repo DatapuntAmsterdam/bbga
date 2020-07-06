@@ -44,6 +44,33 @@ node {
 
 String BRANCH = "${env.BRANCH_NAME}"
 
+if (BRANCH == "develop") {
+
+    node {
+        stage('Push acceptance image') {
+            tryStep "image tagging", {
+                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                    def image = docker.image("datapunt/bbga:${env.BUILD_NUMBER}")
+                    image.pull()
+                    image.push("develop")
+                }
+            }
+        }
+    }
+
+    node {
+        stage("Deploy to TEST") {
+            tryStep "deployment", {
+                build job: 'Subtask_Openstack_Playbook',
+                parameters: [
+                    [$class: 'StringParameterValue', name: 'INVENTORY', value: 'test'],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
+                ]
+            }
+        }
+    }
+}
+
 if (BRANCH == "master") {
 
     node {
