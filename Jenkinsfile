@@ -52,7 +52,7 @@ if (BRANCH == "develop") {
                 docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
                     def image = docker.image("datapunt/bbga:${env.BUILD_NUMBER}")
                     image.pull()
-                    image.push("develop")
+                    image.push("test")
                 }
             }
         }
