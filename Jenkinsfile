@@ -1,5 +1,7 @@
 #!groovy
 
+String PLAYBOOK = 'deploy.yml'
+
 def tryStep(String message, Closure block, Closure tearDown = null) {
     try {
         block()
@@ -44,6 +46,34 @@ node {
 
 String BRANCH = "${env.BRANCH_NAME}"
 
+if (BRANCH == "develop") {
+
+    node {
+        stage('Push acceptance image') {
+            tryStep "image tagging", {
+                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                    def image = docker.image("datapunt/bbga:${env.BUILD_NUMBER}")
+                    image.pull()
+                    image.push("test")
+                }
+            }
+        }
+    }
+
+    node {
+        stage("Deploy to TEST") {
+            tryStep "deployment", {
+                build job: 'Subtask_Openstack_Playbook',
+                parameters: [
+                    [$class: 'StringParameterValue', name: 'INVENTORY', value: 'test'],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: "${PLAYBOOK}"],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_bbga"],
+                ]
+            }
+        }
+    }
+}
+
 if (BRANCH == "master") {
 
     node {
@@ -64,7 +94,8 @@ if (BRANCH == "master") {
                 build job: 'Subtask_Openstack_Playbook',
                 parameters: [
                     [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: "${PLAYBOOK}"],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_bbga"],
                 ]
             }
         }
@@ -94,7 +125,8 @@ if (BRANCH == "master") {
                 build job: 'Subtask_Openstack_Playbook',
                 parameters: [
                     [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-bbga.yml'],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: "${PLAYBOOK}"],
+                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_bbga"],
                 ]
             }
         }
