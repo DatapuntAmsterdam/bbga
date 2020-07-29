@@ -74,6 +74,12 @@ if (BRANCH == "master") {
     }
 }
 
+
+    stage('Waiting for approval') {
+        slackSend channel: '#ci-channel', color: 'warning', message: 'BBGA is waiting for Acceptance Release - please confirm'
+        input "Deploy to Acceptance?"
+    }
+
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
