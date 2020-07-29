@@ -46,10 +46,10 @@ node {
 
 String BRANCH = "${env.BRANCH_NAME}"
 
-if (BRANCH == "develop") {
+if (BRANCH == "master") {
 
     node {
-        stage('Push acceptance image') {
+        stage('Push Test image') {
             tryStep "image tagging", {
                 docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
                     def image = docker.image("datapunt/bbga:${env.BUILD_NUMBER}")
@@ -73,8 +73,6 @@ if (BRANCH == "develop") {
         }
     }
 }
-
-if (BRANCH == "master") {
 
     node {
         stage('Push acceptance image') {
